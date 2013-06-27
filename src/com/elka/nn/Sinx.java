@@ -31,11 +31,12 @@ public class Sinx {
 		try {
 			// BufferedReader in = new BufferedReader(new
 			// InputStreamReader(System.in));
-			String path = System.getProperty("user.home");
-			File textfile = new File(path, "sinxB.txt");
-			PrintStream out = new PrintStream(new FileOutputStream(textfile));
+			//String path = System.getProperty("user.home");
+			//File textfile = new File(path, "sinxB.txt");
+			//PrintStream out = new PrintStream(new FileOutputStream(textfile));
+			PrintStream out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX1.txt"));
 			System.setOut(out);
-			for (int k = 0; k < 10000; k++) {
+			for (int k = 0; k < 100; k++) {
 				if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
