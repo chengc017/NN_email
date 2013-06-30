@@ -13,6 +13,7 @@ public class Sinx {
 
 	// private static double[] x;
 	private static double err;
+	private static PrintStream out;
 
 	/**
 	 * @param args
@@ -29,12 +30,15 @@ public class Sinx {
 		 * +i+ " "+ "Wart: " +data[i]); }
 		 */
 		try {
-			// BufferedReader in = new BufferedReader(new
-			// InputStreamReader(System.in));
-			//String path = System.getProperty("user.home");
-			//File textfile = new File(path, "sinxB.txt");
-			//PrintStream out = new PrintStream(new FileOutputStream(textfile));
-			PrintStream out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX1.txt"));
+			if (System.getProperty("os.name").startsWith("Linux")) {
+				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX1.txt"));	
+			} else if (System.getProperty("os.name").startsWith("Windows")) {
+				String path = System.getProperty("user.home");
+				File textfile = new File(path, "sinxB.txt");
+				out = new PrintStream(new FileOutputStream(textfile));
+			} else {
+				System.out.println("Nie wiem jaki system - ERROR");
+			}
 			System.setOut(out);
 			for (int k = 0; k < 100; k++) {
 				if (k > 0) {
@@ -96,7 +100,7 @@ public class Sinx {
 		}
 		return data;
 	}
-
+	/*
 	private static double[] dataSeriesEX(int from, int to) {
 		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
@@ -104,4 +108,5 @@ public class Sinx {
 		}
 		return data;
 	}
+	*/
 }
