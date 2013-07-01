@@ -40,7 +40,7 @@ public class Sinx {
 				System.out.println("Nie wiem jaki system - ERROR");
 			}
 			System.setOut(out);
-			for (int k = 0; k < 100; k++) {
+			for (int k = 0; k < 1000; k++) {
 				if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)

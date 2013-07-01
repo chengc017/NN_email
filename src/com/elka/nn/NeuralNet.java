@@ -119,6 +119,8 @@ public class NeuralNet {
 		} else {
 			this.learnRate = PI * this.learnRate;
 		}
+		
+		//this.learnRate = (Math.sqrt(this.error) > KW*this.prevError) ? PD*this.learnRate : PI*this.learnRate; 
 	}
 
 	public void setPrevError() {

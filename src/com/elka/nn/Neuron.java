@@ -94,8 +94,7 @@ public class Neuron {
 	public void setU() {
 		this.u = 0;
 		for (int i = 0; i < x.length; i++) {
-			this.u = this.u + this.x[i] * this.weights[i]; // u = waga * wektor
-															// x
+			this.u = this.u + this.x[i] * this.weights[i]; // u = waga * wektor x
 		}
 	}
 
