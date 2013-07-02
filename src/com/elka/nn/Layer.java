@@ -60,6 +60,8 @@ public class Layer {
 		}
 	}
 
+	
+	// tu jest brane n.getY bo wyjœciowy neuron jest tylko jeden, dlatego brane jest jego Y.
 	public void setLastLayersError(double target) {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
@@ -108,25 +110,30 @@ public class Layer {
 					// 2*(neuOut.getY()-target)*(neuOut.getWeight(i+1)*neurons[i].derivUniActiveFunction()*neurons[i].getX(j));
 					// // i+1 bo zerowa waga dla polaryzacji, a my mamy jakby
 					// zerowy neuron jako pierwszy
-					double in = (neuOut.getY() - target)
-							* (neuOut.getWeight(i + 1)
-									* neurons[i].derivBiActiveFunction() * neurons[i]
-										.getX(j));
+					double in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
+							* neurons[i].derivBiActiveFunction() * neurons[i].getX(j));
 					this.neurons[i].setWeightChange(j, in);
 				}
 			}
 		}
 	}
 
-	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez
-																	// argument
-																	// przekazywac
-																	// wartosc
+	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { // wsp uczenia
 			n.updateWeights(learn_rate);
 		}
 	}
-
+	
+	public void makeNeuronCopy() {
+		for (Neuron n : neurons) {
+			n.makeWeightsCopy();
+		}
+	}
+	/*
+	public double[] getNeuronWeightsCopy() {
+		double[] weightsTMP = new double[]
+	}
+	*/
 	public String toString(String layersName) {
 		String output = layersName + "\n";
 		for (Neuron neuron : neurons) {
