@@ -68,10 +68,10 @@ public class Sinx {
 				NN.updateWeightsInLayers(); // jaka kolejnosc?
 				err = NN.getError();
 				System.out.println("Iteracja zew: " + k
-						+ " BLAD SREDNIOKWADR.: " + err / 2);
+						+ " BLAD SREDNIOKWADR.: " + err);
 				System.out
 						.println("---------------------------------------------------------------------------------------");
-				if (err / 2 < 0.00001) {
+				if (err < 0.00001) {
 					// System.out.println("iteracje= " +k);
 					break;
 				}

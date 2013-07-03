@@ -2,12 +2,24 @@ package com.elka.nn;
 
 public class MinKierunkowa {
 
-	private double[] weightCopy;
-	private double[] prevWeightCopy;
+	private double firstParam;
+	private double secParam;
 	
-	public MinKierunkowa(double alfa, double[] p_i) {
-		this.weightCopy = this.prevWeightCopy *alfa * p_i;
+	public MinKierunkowa() {
+		this.firstParam = 0.0;
+		this.secParam = 1E-5;
 	}
+	
+	private double doMinKierunkowa(NeuralNet Network, double data, double param) {
+		Network.goForward(inputX)
+		
+		
+		return ;
+		
+	}
+	
+	
+	
 	
 	
 	

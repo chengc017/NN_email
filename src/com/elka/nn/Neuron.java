@@ -5,7 +5,8 @@ import java.util.Random;
 public class Neuron {
 	private double weights[]; // wagi wejscia neuronu
 	private double weightsChange[]; // wektor na zmiane wagi w procesie uczenia
-	private double weightsCopy[];	// kopie wag neuronu (do minimalizacji kierunkowej)
+	private double weightsCopy[]; // kopie wag neuronu (do minimalizacji kierunkowej)
+	private double weightsChangeCopy[];
 	private double x[]; // wektor wejsciowy (trzeba uwzglednic polaryzacje, wiec
 						// z gory rozmiar o 1 wiekszy niz sam wektor)
 
@@ -122,9 +123,34 @@ public class Neuron {
 		}
 	}
 	
+	public void getWeightsCopyToWeights() {
+		for (int i=0; i<weights.length; i++) {
+			this.weights[i] = this.weightsCopy[i];
+		}
+	}
+	
+	public void makeWeightsChangeCopy() {
+		for (int i=0; i<weightsChangeCopy.length; i++) {
+			this.weightsChangeCopy[i] = this.weightsChange[i];
+		}
+	}
+	
+	public void getWeightsChangeCopyToWeightsChange() {
+		for (int i=0; i<weightsChange.length; i++) {
+			this.weightsChange[i] = this.weightsChangeCopy[i];
+		}
+	}
+	
 	public double getWeightsCopy(int i) {
 		return this.weightsCopy[i];
 	}
+	
+	public void updateWeightsOnCopy(double alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
+		for (int i=0; i<weightsCopy.length; i++) {
+			this.weights[i] = this.weights[i]+alfa*(-this.weightsChange[i]); // @-weightsChange = p
+		}
+	}
+	
 	
 	@Override
 	public String toString() {

@@ -45,20 +45,13 @@ public class NeuralNet {
 		this.learnRate = learnRate;
 		layers = new Layer[numOfLayers];
 		layers[0] = new Layer(numNeurons1, numNeuron1Size); // warstwa ukryta
-		layers[1] = new Layer(numNeurons2, numNeurons1 + 1); // warstwa
-																// wyjsciowa
-																// (tyle ile w
-																// ukrytej + 1
-																// (polaryzacja)
+		layers[1] = new Layer(numNeurons2, numNeurons1 + 1); // warstwa wyjsciowa (tyle ile w ukrytej + 1 (polaryzacja)
 	}
 
 	public void learnNet(double[] inputX, double target) {
 		layers[0].startLayer(inputX, true);
-		layers[1].startLayer(layers[0].getLayerOutput(), false); // przekazuje
-																	// wyjscie
-																	// warstwy
-																	// ukrytej
-		// na wejscie warstwy wyjsciowej
+		layers[1].startLayer(layers[0].getLayerOutput(), false); // przekazuje wyjscie warstwy ukrytej
+																 // na wejscie warstwy wyjsciowej
 		layers[1].setLastLayersError(target); // ustawiam sobie odpowiednie
 												// zmiany wag w warstwie
 												// wyjsciowej (ale NIE ZMIENIAM)
@@ -70,17 +63,40 @@ public class NeuralNet {
 														// ZMIENIAM)
 		// layers[0].updateWeightsInNeuronsLayer();
 	}
-
+	
 	public double goForward(double[] inputX) {
 		layers[0].startLayer(inputX, true);
 		layers[1].startLayer(layers[0].getLayerOutput(), false);
 		return layers[1].getLastSolution();
 	}
 
+	public double goThroughLearning(double[] data) {
+		// System.out.println(NN.toString());
+		for (int i = 0; i < data.length; i++) {
+			double[] x = new double[] { i };
+			//learnNet(x, data[i]);
+			// System.out.println(NN.toStringX());
+			setError(goForward(x), data[i]);
+			/*System.out.println("Iteracja zew: " + k + " Iteracja wew: "
+					+ i + " " + " Wart. otrzymana: "
+					+ getLayerLastSolution() + " Wart. ocze: "
+					+ data[i]);
+			*/
+		}
+		return getError();
+	}
+
+
+	
+	/*
+	public double goForwardMinKierunkowa(double[] inputX, double alfa) {
+		layers[0].startLayer(inputX, true);
+		layers[1].startLayer(layers[0].getLayerOutput(), false);
+	}
+	*/
+	
 	public void setError(double y, double d) { // blad sredniokwadratowy sieci
-		// error =+ (y-d)*(y-d); // nie wiem czy tu powinien byc plus czy samo =
-		// :<<<
-		this.error = this.error + ((y - d) * (y - d));
+		this.error = this.error + 0.5*((y - d) * (y - d));
 	}
 
 	public void setErrorZero() {
@@ -112,6 +128,18 @@ public class NeuralNet {
 		layers[1].updateWeightsInNeuronsLayer(this.learnRate);
 		layers[0].updateWeightsInNeuronsLayer(this.learnRate);
 	}
+	
+	public void updateCopyWeightsInLayers(double alfa) {
+		for (Layer l : layers) {
+			l.updateCopyWeightsInNeuronsLayer(alfa);
+		}
+	}
+	
+	public void getOriginalWeights() {
+		for (Layer l : layers) {
+			l.getWeightsCopyToWeightsInNeuronsLayer();
+		}
+	}
 
 	public void updateLearnRate() {
 		if (Math.sqrt(this.error) > KW * this.prevError) {
@@ -130,6 +158,7 @@ public class NeuralNet {
 	public double getLearnRate() {
 		return this.learnRate;
 	}
+	
 
 	@Override
 	public String toString() {

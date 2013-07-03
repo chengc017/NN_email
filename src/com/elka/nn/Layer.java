@@ -66,29 +66,12 @@ public class Layer {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
-					n.setWeightChange(i, (n.getY() - target) * 1.0); // usuniete
-																		// 2*
-																		// przed
-																		// nawaisem,
-																		// tak
-																		// samo
-																		// u
-																		// dolu
+					n.setWeightChange(i, (n.getY() - target) * 1.0); 
+					// usuniete 2* przed nawaisem, tak samo u dolu
 				} else {
-					n.setWeightChange(i, (n.getY() - target) * n.getX(i)); // to
-																			// X
-																			// to
-																			// po
-																			// prostu
-																			// juz
-																			// obliczone
-																			// wejscie
-																			// tego
-																			// neuronu
-																			// (bo
-																			// to
-																			// jest
-				} // tak naprawde wyjscie neuronu poprzedniej warstwy (czyli
+					n.setWeightChange(i, (n.getY() - target) * n.getX(i)); 
+				} 	// to X to po prostu juz obliczone wejscie tego neuronu (bo to jest
+					// tak naprawde wyjscie neuronu poprzedniej warstwy (czyli
 					// jakby y z poprzedniej
 					// warstwy (y = funkcja(u) gdzie u = suma (x_j * w_ij)
 			}
@@ -99,10 +82,7 @@ public class Layer {
 	 * @TODO trzeba zmienic wzor na blad warstwy ukrytej
 	 */
 
-	public void setLayersError(Layer outputLayer, double target) { // usuniete
-																	// 2* w
-																	// zmiennej
-																	// in
+	public void setLayersError(Layer outputLayer, double target) { // usuniete 2* w zmiennej in
 		for (Neuron neuOut : outputLayer.neurons) {
 			for (int i = 0; i < this.neurons.length; i++) {
 				for (int j = 0; j < this.neurons[i].getWeightsSize(); j++) {
@@ -129,11 +109,22 @@ public class Layer {
 			n.makeWeightsCopy();
 		}
 	}
-	/*
-	public double[] getNeuronWeightsCopy() {
-		double[] weightsTMP = new double[]
+	
+	public void updateCopyWeightsInNeuronsLayer(double alfa) {
+		for (Neuron n : neurons) {
+			n.updateWeightsOnCopy(alfa);
+		}
 	}
-	*/
+	
+	public void getWeightsCopyToWeightsInNeuronsLayer() {
+		for (Neuron n : neurons) {
+			n.getWeightsCopyToWeights();
+		}
+	}
+	
+	
+	
+	
 	public String toString(String layersName) {
 		String output = layersName + "\n";
 		for (Neuron neuron : neurons) {
