@@ -77,6 +77,22 @@ public class Layer {
 			}
 		}
 	}
+	
+	public void setLastLayersError(double target, double paramGradSprzez) {
+		for (Neuron n : neurons) {
+			for (int i = 0; i < n.getWeightsSize(); i++) {
+				if (i == 0) {
+					n.setWeightChange(i, (n.getY() - target) * 1.0 + paramGradSprzez); 
+					// usuniete 2* przed nawaisem, tak samo u dolu
+				} else {
+					n.setWeightChange(i, (n.getY() - target) * n.getX(i) + paramGradSprzez); 
+				} 	// to X to po prostu juz obliczone wejscie tego neuronu (bo to jest
+					// tak naprawde wyjscie neuronu poprzedniej warstwy (czyli
+					// jakby y z poprzedniej
+					// warstwy (y = funkcja(u) gdzie u = suma (x_j * w_ij)
+			}
+		}
+	}
 
 	/**
 	 * @TODO trzeba zmienic wzor na blad warstwy ukrytej
@@ -97,9 +113,25 @@ public class Layer {
 			}
 		}
 	}
+	
+	public void setLayersError(Layer outputLayer, double target, double paramGradSprzez) { // usuniete 2* w zmiennej in
+		for (Neuron neuOut : outputLayer.neurons) {
+			for (int i = 0; i < this.neurons.length; i++) {
+				for (int j = 0; j < this.neurons[i].getWeightsSize(); j++) {
+					// double in =
+					// 2*(neuOut.getY()-target)*(neuOut.getWeight(i+1)*neurons[i].derivUniActiveFunction()*neurons[i].getX(j));
+					// // i+1 bo zerowa waga dla polaryzacji, a my mamy jakby
+					// zerowy neuron jako pierwszy
+					double in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
+							* neurons[i].derivBiActiveFunction() * neurons[i].getX(j));
+					this.neurons[i].setWeightChange(j, in + paramGradSprzez);
+				}
+			}
+		}
+	}
 
 	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez argument przekazywac wartosc
-		for (Neuron n : neurons) { // wsp uczenia
+		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.updateWeights(learn_rate);
 		}
 	}
@@ -107,6 +139,12 @@ public class Layer {
 	public void makeNeuronCopy() {
 		for (Neuron n : neurons) {
 			n.makeWeightsCopy();
+		}
+	}
+	
+	public void makeWeightsChangeNeuronCopy() {
+		for (Neuron n : neurons) {
+			n.makeWeightsChangeCopy();
 		}
 	}
 	

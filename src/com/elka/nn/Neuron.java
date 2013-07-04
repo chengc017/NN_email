@@ -146,7 +146,7 @@ public class Neuron {
 	}
 	
 	public void updateWeightsOnCopy(double alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
-		for (int i=0; i<weightsCopy.length; i++) {
+		for (int i=0; i<weights.length; i++) {
 			this.weights[i] = this.weights[i]+alfa*(-this.weightsChange[i]); // @-weightsChange = p
 		}
 	}

@@ -72,6 +72,11 @@ public class NeuralNet {
 
 	public double goThroughLearning(double[] data) {
 		// System.out.println(NN.toString());
+		/*
+		if (x.length != data.length) {
+			System.out.println("Rozmiar wektora wejsciowego != wektora z danymi");
+			return -1;
+		}*/
 		for (int i = 0; i < data.length; i++) {
 			double[] x = new double[] { i };
 			//learnNet(x, data[i]);
@@ -140,6 +145,18 @@ public class NeuralNet {
 			l.getWeightsCopyToWeightsInNeuronsLayer();
 		}
 	}
+	
+	public void makeOriginalWeightsCopy() {
+		for (Layer l :layers) {
+			l.makeNeuronCopy();
+		}
+	}
+	
+	public void makeOriginalWeightsChangeCopy() {
+		for (Layer l : layers) {
+			l.makeWeightsChangeNeuronCopy();
+		}
+	}
 
 	public void updateLearnRate() {
 		if (Math.sqrt(this.error) > KW * this.prevError) {
@@ -147,7 +164,6 @@ public class NeuralNet {
 		} else {
 			this.learnRate = PI * this.learnRate;
 		}
-		
 		//this.learnRate = (Math.sqrt(this.error) > KW*this.prevError) ? PD*this.learnRate : PI*this.learnRate; 
 	}
 
@@ -157,6 +173,10 @@ public class NeuralNet {
 
 	public double getLearnRate() {
 		return this.learnRate;
+	}
+	
+	public void setLearnRate(double learnRate) {
+		this.learnRate = learnRate;
 	}
 	
 
