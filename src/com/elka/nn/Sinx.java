@@ -8,7 +8,7 @@ import java.io.PrintStream;
 public class Sinx {
 	private static double[] data;
 	private static final int FROM = 0;
-	private static final int TO = 45;
+	private static final int TO = 101;
 	private static final int NUM_LAYERS = 2;
 
 	// private static double[] x;
@@ -40,7 +40,7 @@ public class Sinx {
 				System.out.println("Nie wiem jaki system - ERROR");
 			}
 			System.setOut(out);
-			for (int k = 0; k < 1000; k++) {
+			for (int k = 0; k < 5000; k++) {
 				if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)

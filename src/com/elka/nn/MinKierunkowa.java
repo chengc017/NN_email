@@ -10,7 +10,7 @@ public class MinKierunkowa {
 	private NeuralNet Network;
 	private ArrayList<Double>[] dataList;	// tu zeby mi ladnie iterowa³ w petli po kolejnych próbkach ;) <-- @TODO
 	
-	public MinKierunkowa(NeuralNet NetCopy, double alfa) {
+	public MinKierunkowa(NeuralNet NetCopy) {
 		this.firstParam = 0.0;
 		this.secParam = 1E-5;
 		this.Network = NetCopy;
@@ -23,8 +23,10 @@ public class MinKierunkowa {
 		return Network.goThroughLearning(data);
 	}
 	
-	private double getParamOfMinKierunkowa(double[] data) {
+	public double getParamOfMinKierunkowa(double[] data) {
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
+		firstParam = 0.0;
+		secParam = 1E-5;
 		double ff1 = goForwardMinKierunkowa(data, this.firstParam);
 		double ff2 = goForwardMinKierunkowa(data, this.secParam);
 		while (ff1 > ff2) {

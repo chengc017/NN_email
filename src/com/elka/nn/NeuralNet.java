@@ -1,5 +1,8 @@
 package com.elka.nn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NeuralNet {
 
 	// public final int NUM_LAYERS = 2;
@@ -134,6 +137,18 @@ public class NeuralNet {
 		layers[0].updateWeightsInNeuronsLayer(this.learnRate);
 	}
 	
+	public void updateWeightsInLayersGradSprzez(double paramGradSprzez) { // jako argument dac wart wsp uczenia
+		// sie
+		// for (Layer l : layers) {
+		// l.updateWeightsInNeuronsLayer(this.learnRate);
+		// }
+		// for (int i=layers.length;i<0;i--) {
+
+		// }
+		layers[1].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+		layers[0].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+	}
+	
 	public void updateCopyWeightsInLayers(double alfa) {
 		for (Layer l : layers) {
 			l.updateCopyWeightsInNeuronsLayer(alfa);
@@ -179,6 +194,21 @@ public class NeuralNet {
 		this.learnRate = learnRate;
 	}
 	
+	public List<Double> getWeightsChangeTable() {
+		List<Double> tmp = new ArrayList<Double>();
+		for (Layer l : layers) {
+			tmp.addAll(l.getWeightsChangeLayer());
+		}
+		return tmp;
+	}
+	
+	public List<Double> getPElementTable() {
+		List<Double> tmp = new ArrayList<Double>();
+		for (Layer l : layers) {
+			tmp.addAll(l.getPElementLayer());
+		}
+		return tmp;
+	}
 
 	@Override
 	public String toString() {

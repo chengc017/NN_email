@@ -1,5 +1,8 @@
 package com.elka.nn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Layer {
 
 	protected Neuron[] neurons;
@@ -78,7 +81,7 @@ public class Layer {
 		}
 	}
 	
-	public void setLastLayersError(double target, double paramGradSprzez) {		// paraGradSprzezony = beta*p1[i]
+/*	public void setLastLayersError(double target, double paramGradSprzez) {		// paraGradSprzezony = beta*p1[i]
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
@@ -92,7 +95,7 @@ public class Layer {
 					// warstwy (y = funkcja(u) gdzie u = suma (x_j * w_ij)
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * @TODO trzeba zmienic wzor na blad warstwy ukrytej
@@ -114,7 +117,7 @@ public class Layer {
 		}
 	}
 	
-	public void setLayersError(Layer outputLayer, double target, double paramGradSprzez) { // usuniete 2* w zmiennej in
+/*	public void setLayersError(Layer outputLayer, double target, double paramGradSprzez) { // usuniete 2* w zmiennej in
 		for (Neuron neuOut : outputLayer.neurons) {
 			for (int i = 0; i < this.neurons.length; i++) {
 				for (int j = 0; j < this.neurons[i].getWeightsSize(); j++) {
@@ -128,11 +131,20 @@ public class Layer {
 				}
 			}
 		}
-	}
+	}*/
 
 	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
+			n.makeCopyOFP();
 			n.setPAsG();
+			n.updateWeights(learn_rate);
+		}
+	}
+	
+	public void updateWeightsInNeuronsLayerGradSprzez(double learn_rate, double paramGradSprzez) { // tu przez argument przekazywac wartosc
+		for (Neuron n : neurons) { 								 // wsp uczenia
+			n.makeCopyOFP();
+			n.setPAsGWithGradSprzez(paramGradSprzez);
 			n.updateWeights(learn_rate);
 		}
 	}
@@ -159,6 +171,38 @@ public class Layer {
 		for (Neuron n : neurons) {
 			n.getWeightsCopyToWeights();
 		}
+	}
+	
+	
+	public List<Double> getWeightsChangeLayer() {
+//		double[] tmp = new double[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
+		List<Double> tmp = new ArrayList<Double>();
+//		for (int i=0; i<neurons.length*neurons[0].getWeightsSize(); i++) {
+//			for (Neuron n : neurons) {
+//				for (int k=0; k<neurons[0].getWeightsSize(); k++) {
+//					tmp[i] = n.getWeightChange(k);
+//				}
+//			}
+//		}
+		for (Neuron n : neurons) {
+			for (int i=0; i<n.getWeightsSize(); i++) {
+				tmp.add(n.getWeightChange(i));
+			}
+		}
+		return tmp;
+	}
+	
+	public List<Double> getPElementLayer() {
+//		double[] tmp = new double[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
+//		for (int i=0; i<neurons.length*neurons[0].getWeightsSize(); i++) {
+		List<Double> tmp = new ArrayList<Double>();
+		for (Neuron n : neurons) {
+			for (int k=0; k<n.getWeightsSize(); k++) {
+				tmp.add(n.getPElement(k));
+			}
+		}
+//		}
+		return tmp;
 	}
 	
 	

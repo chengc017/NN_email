@@ -8,6 +8,7 @@ public class Neuron {
 	private double weightsCopy[]; // kopie wag neuronu (do minimalizacji kierunkowej)
 	private double weightsChangeCopy[];
 	private double p[];
+	private double p1[];
 	private double x[]; // wektor wejsciowy (trzeba uwzglednic polaryzacje, wiec
 						// z gory rozmiar o 1 wiekszy niz sam wektor)
 
@@ -26,6 +27,7 @@ public class Neuron {
 		this.weightsChange = new double[x.length];
 		this.weightsCopy = new double[x.length];
 		this.p = new double[x.length];
+		this.p1 = new double[x.length];
 	}
 
 	public void setRandomWeights() {
@@ -33,7 +35,8 @@ public class Neuron {
 		weights = new double[x.length];
 		for (int i = 0; i < weights.length; i++) {
 			double tmp = generator.nextDouble();
-			weights[i] = tmp;
+//			weights[i] = tmp;
+			weights[i] = 0.2*(-0.5+tmp);
 		}
 	}
 
@@ -113,12 +116,35 @@ public class Neuron {
 		}
 	}
 	
+	public void makeCopyOFP() {
+		for (int i=0; i<p.length; i++) {
+			p1[i] = p[i];
+		}
+	}
+	
 	public void setPAsGWithGradSprzez(double paramGradSprzez) { 	// param = beta * p1[i]
 		for (int i=0; i<p.length; i++) {
-			p[i] = -weightsChange[i] + paramGradSprzez;
+			p[i] = -weightsChange[i] + paramGradSprzez * p1[i];
 		}
 	}
 
+//	public double getWeightsChange(int index) {
+//		double[] tmp = new double[weightsChange.length];
+//		for (int i=0; i<weightsChange.length; i++) {
+//			tmp[i] = weightsChange[i];
+//		}
+//		return weightsChange[index];
+//	}
+	
+	public double getPElement(int index) {
+//		double[] tmp = new double[p.length];
+//		for (int i=0; i<p.length; i++) {
+//			tmp[i] = p[i];
+//		}
+//		return tmp;
+		return p[index];
+	}
+	
 	public void updateWeights(double learn_rate) {
 		for (int i = 0; i < weights.length; i++) {
 			weights[i] = weights[i] + learn_rate * p[i];
