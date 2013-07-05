@@ -4,9 +4,10 @@ import java.util.Random;
 
 public class Neuron {
 	private double weights[]; // wagi wejscia neuronu
-	private double weightsChange[]; // wektor na zmiane wagi w procesie uczenia
+	private double weightsChange[]; // wektor na zmiane wagi w procesie uczenia	---> g
 	private double weightsCopy[]; // kopie wag neuronu (do minimalizacji kierunkowej)
 	private double weightsChangeCopy[];
+	private double p[];
 	private double x[]; // wektor wejsciowy (trzeba uwzglednic polaryzacje, wiec
 						// z gory rozmiar o 1 wiekszy niz sam wektor)
 
@@ -24,6 +25,7 @@ public class Neuron {
 		this.x = new double[inputSize];
 		this.weightsChange = new double[x.length];
 		this.weightsCopy = new double[x.length];
+		this.p = new double[x.length];
 	}
 
 	public void setRandomWeights() {
@@ -104,10 +106,22 @@ public class Neuron {
 	public void setZeroToU() {
 		this.u = 0;
 	}
+	
+	public void setPAsG() {
+		for (int i=0; i<p.length; i++) {
+			p[i] = -weightsChange[i];
+		}
+	}
+	
+	public void setPAsGWithGradSprzez(double paramGradSprzez) { 	// param = beta * p1[i]
+		for (int i=0; i<p.length; i++) {
+			p[i] = -weightsChange[i] + paramGradSprzez;
+		}
+	}
 
 	public void updateWeights(double learn_rate) {
 		for (int i = 0; i < weights.length; i++) {
-			weights[i] = weights[i] + (-learn_rate * weightsChange[i]);
+			weights[i] = weights[i] + learn_rate * p[i];
 		}
 	}
 

@@ -78,7 +78,7 @@ public class Layer {
 		}
 	}
 	
-	public void setLastLayersError(double target, double paramGradSprzez) {
+	public void setLastLayersError(double target, double paramGradSprzez) {		// paraGradSprzezony = beta*p1[i]
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
@@ -132,6 +132,7 @@ public class Layer {
 
 	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
+			n.setPAsG();
 			n.updateWeights(learn_rate);
 		}
 	}
