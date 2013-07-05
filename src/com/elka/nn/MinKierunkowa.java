@@ -26,7 +26,7 @@ public class MinKierunkowa {
 	public double getParamOfMinKierunkowa(double[] data) {
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
 		firstParam = 0.0;
-		secParam = 1E-5;
+		secParam = 0.001;//1E-5;
 		double ff1 = goForwardMinKierunkowa(data, this.firstParam);
 		double ff2 = goForwardMinKierunkowa(data, this.secParam);
 		while (ff1 > ff2) {

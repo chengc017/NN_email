@@ -65,10 +65,13 @@ public class SinX_MinKierGrad {
 				// System.out.println(NN.toStringWCH());
 				// System.out.println("WSP UCZENIA: " + NN.getLearnRate());
 				NN.setLearnRate(MK.getParamOfMinKierunkowa(data));
+			/*	if (k > 5) {
+					NN.updateLearnRate();
+				}*/
 				GS.makeGradSprzez(NN);
 				System.out.println("WSP UCZENIA: " + NN.getLearnRate());
 				// adaptacyjny dobor wspolcz uczenia
-				NN.updateWeightsInLayers(); // jaka kolejnosc?
+				//NN.updateWeightsInLayers(); // jaka kolejnosc?
 				err = NN.getError();
 				System.out.println("Iteracja zew: " + k
 						+ " BLAD SREDNIOKWADR.: " + err);
