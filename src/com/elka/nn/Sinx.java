@@ -14,7 +14,7 @@ public class Sinx {
 	// private static double[] x;
 	private static double err;
 	private static PrintStream out;
-
+	//
 	/**
 	 * @param args
 	 */
