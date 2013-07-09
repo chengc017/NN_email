@@ -2,6 +2,7 @@ package com.elka.nn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class NeuralNet {
 
@@ -58,13 +59,11 @@ public class NeuralNet {
 		layers[1].setLastLayersError(target); // ustawiam sobie odpowiednie
 												// zmiany wag w warstwie
 												// wyjsciowej (ale NIE ZMIENIAM)
-		// layers[1].updateWeightsInNeuronsLayer();
 		layers[0].setLayersError(layers[1], target); // ustawiam sobie
 														// odpowiednie zmiany
 														// wag w warstwie
 														// ukrytej (ale NIE
 														// ZMIENIAM)
-		// layers[0].updateWeightsInNeuronsLayer();
 	}
 	
 	public double goForward(double[] inputX) {
@@ -80,8 +79,9 @@ public class NeuralNet {
 			System.out.println("Rozmiar wektora wejsciowego != wektora z danymi");
 			return -1;
 		}*/
+		setErrorZero();
 		for (int i = 0; i < data.length; i++) {
-			double[] x = new double[] { i };
+			double[] x = new double[] { (double)i };
 			//learnNet(x, data[i]);
 			// System.out.println(NN.toStringX());
 			setError(goForward(x), data[i]);
@@ -94,7 +94,28 @@ public class NeuralNet {
 		return getError();
 	}
 
-
+	public double goThroughLearning(Vector<double[]> dVec, double[] data) {
+		// System.out.println(NN.toString());
+		/*
+		if (x.length != data.length) {
+			System.out.println("Rozmiar wektora wejsciowego != wektora z danymi");
+			return -1;
+		}*/
+		double[] x = new double[5];
+		setErrorZero();
+		for (int i = 0; i < data.length; i++) {
+			x = dVec.get(i);
+			//learnNet(x, data[i]);
+			// System.out.println(NN.toStringX());
+			setError(goForward(x), data[i]);
+			/*System.out.println("Iteracja zew: " + k + " Iteracja wew: "
+					+ i + " " + " Wart. otrzymana: "
+					+ getLayerLastSolution() + " Wart. ocze: "
+					+ data[i]);
+			*/
+		}
+		return getError();
+	}
 	
 	/*
 	public double goForwardMinKierunkowa(double[] inputX, double alfa) {
@@ -174,7 +195,7 @@ public class NeuralNet {
 	}
 
 	public void updateLearnRate() {
-		if (Math.sqrt(this.error) > KW * this.prevError) {
+		if (this.error > Math.sqrt(KW) * this.prevError) {
 			this.learnRate = PD * this.learnRate;
 		} else {
 			this.learnRate = PI * this.learnRate;
@@ -183,7 +204,7 @@ public class NeuralNet {
 	}
 
 	public void setPrevError() {
-		this.prevError = Math.sqrt(this.error);
+		this.prevError = this.error;
 	}
 
 	public double getLearnRate() {

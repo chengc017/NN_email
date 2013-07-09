@@ -24,7 +24,7 @@ public class SinX_MinKierGrad {
 		data = new double[TO - FROM];
 		data = dataSeries(FROM, TO);
 		// data = dataSeries(FROM, TO);
-		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 5, 2, 1);
+		NeuralNet NN = new NeuralNet(0.05, NUM_LAYERS, 15, 2, 1);
 		/*
 		 * for (int i=0; i<data.length; i++) { System.out.println("Iteracja: "
 		 * +i+ " "+ "Wart: " +data[i]); }
@@ -35,7 +35,7 @@ public class SinX_MinKierGrad {
 		
 		try {
 			if (System.getProperty("os.name").startsWith("Linux")) {
-				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX1.txt"));	
+				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX_mingrd_6.txt"));	
 			} else if (System.getProperty("os.name").startsWith("Windows")) {
 				String path = System.getProperty("user.home");
 				File textfile = new File(path, "sinxB_GS_MINK.txt");
@@ -45,27 +45,27 @@ public class SinX_MinKierGrad {
 			}
 			System.setOut(out);
 			for (int k = 0; k < 5000; k++) {
-				if (k > 0) {
+/*				if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
-				}
+				}*/
 				NN.setErrorZero();
 				NN.setWeightsZero();
-				// System.out.println(NN.toString());
+				//System.out.println(NN.toString());
 				for (int i = 0; i < data.length; i++) {
-					x = new double[] { i };
+					x = (i == 0) || (i == 1) ? new double[] { 0.1+0.15*(i) } : new double[] { 0.1+0.15*(i-1) } ;
 					NN.learnNet(x, data[i]);
-					// System.out.println(NN.toStringX());
+					//System.out.println(NN.toStringX());
 					NN.setError(NN.getLayerLastSolution(), data[i]);
 					System.out.println("Iteracja zew: " + k + " Iteracja wew: "
 							+ i + " " + " Wart. otrzymana: "
 							+ NN.getLayerLastSolution() + " Wart. ocze: "
 							+ data[i]);
 				}
-				// System.out.println(NN.toStringWCH());
+				//System.out.println(NN.toStringWCH());
 				// System.out.println("WSP UCZENIA: " + NN.getLearnRate());
 				NN.setLearnRate(MK.getParamOfMinKierunkowa(data));
-			/*	if (k > 5) {
+				/*if (k > 5) {
 					NN.updateLearnRate();
 				}*/
 				GS.makeGradSprzez(NN);
@@ -96,12 +96,17 @@ public class SinX_MinKierGrad {
 	}
 
 	private static double[] dataSeries(int from, int to) {
+		//double dx = 15.0/100.0;
+		double x;
 		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
-			if (i == 0) {
-				data[i] = 1;
-			} else if (i != 0) {
-				data[i] = Math.sin(i) / i;
+			if (i == 0 || i == 1) {
+				x = 0.1+0.15*(i);
+				data[i] = 100*Math.sin(x) / x;
+			} 
+			else if (i > 1) {
+				x = 0.1+0.15*(i-1);
+				data[i] = 100*Math.sin(x) / x;
 			}
 		}
 		return data;

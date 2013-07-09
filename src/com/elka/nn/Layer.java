@@ -64,7 +64,7 @@ public class Layer {
 	}
 
 	
-	// tu jest brane n.getY bo wyjœciowy neuron jest tylko jeden, dlatego brane jest jego Y.
+	// tu jest brane n.getY bo wyjï¿½ciowy neuron jest tylko jeden, dlatego brane jest jego Y.
 	public void setLastLayersError(double target) {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
@@ -76,7 +76,7 @@ public class Layer {
 				} 	// to X to po prostu juz obliczone wejscie tego neuronu (bo to jest
 					// tak naprawde wyjscie neuronu poprzedniej warstwy (czyli
 					// jakby y z poprzedniej
-					// warstwy (y = funkcja(u) gdzie u = suma (x_j * w_ij)
+					// warstwy (y = funkcja(u) gdzie u = suma (x_j * w_ij a funkcja = tanh)
 			}
 		}
 	}

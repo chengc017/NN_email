@@ -15,6 +15,8 @@ public class Binaryvec {
 	private static double[] predictedOut;
 	private static final int NUM_LAYERS = 2;
 	private static double err;
+	
+	private static PrintStream out;
 
 	public static void main(String[] args) {
 		dVec = new Vector<double[]>();
@@ -24,19 +26,26 @@ public class Binaryvec {
 		predictedOut = dataSeriesOutArray();
 
 		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 4, 6, 1);
+		
+		GradSprzez GS = new GradSprzez();
+		MinKierunkowa MK = new MinKierunkowa(NN);
 
 		try {
-			// BufferedReader in = new BufferedReader(new
-			// InputStreamReader(System.in));
-			String path = System.getProperty("user.home");
-			File textfile = new File(path, "binVEC.txt");
-			PrintStream out = new PrintStream(new FileOutputStream(textfile));
+			if (System.getProperty("os.name").startsWith("Linux")) {
+				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX_mingrd_1.txt"));	
+			} else if (System.getProperty("os.name").startsWith("Windows")) {
+				String path = System.getProperty("user.home");
+				File textfile = new File(path, "sinxB_GS_MINK.txt");
+				out = new PrintStream(new FileOutputStream(textfile));
+			} else {
+				System.out.println("Nie wiem jaki system - ERROR");
+			}
 			System.setOut(out);
 			for (int k = 0; k < 5000; k++) {
-				if (k > 0) {
+				/*if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
-				}
+				}*/
 				NN.setErrorZero();
 				NN.setWeightsZero();
 				for (int i = 0; i < dVec.size(); i++) {
@@ -47,17 +56,19 @@ public class Binaryvec {
 							+ NN.getLayerLastSolution() + "\t Wart. ocze: "
 							+ predictedOut[i]);
 				}
-				if (k > 5) {
+				/*if (k > 5) {
 					NN.updateLearnRate();
-				}
+				}*/
+				NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
+				GS.makeGradSprzez(NN);
 				System.out.println("WSP UCZENIA: " + NN.getLearnRate());
-				NN.updateWeightsInLayers();
+				//NN.updateWeightsInLayers();
 				err = NN.getError();
 				System.out.println("Iteracja zew: " + k
-						+ " BLAD SREDNIOKWADR.: " + err / 2);
+						+ " BLAD SREDNIOKWADR.: " + err);
 				System.out
 						.println("---------------------------------------------------------------------------------------");
-				if (err / 2 < 0.00001) {
+				if (err  < 0.00001) {
 					// System.out.println("iteracje= " +k);
 					break;
 				}

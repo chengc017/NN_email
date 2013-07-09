@@ -24,14 +24,16 @@ public class Sinx {
 		data = new double[TO - FROM];
 		data = dataSeries(FROM, TO);
 		// data = dataSeries(FROM, TO);
-		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 3, 2, 1);
+		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 7, 2, 1);
 		/*
 		 * for (int i=0; i<data.length; i++) { System.out.println("Iteracja: "
 		 * +i+ " "+ "Wart: " +data[i]); }
 		 */
+		GradSprzez GS = new GradSprzez();
+		
 		try {
 			if (System.getProperty("os.name").startsWith("Linux")) {
-				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX1.txt"));	
+				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX_proba.txt"));	
 			} else if (System.getProperty("os.name").startsWith("Windows")) {
 				String path = System.getProperty("user.home");
 				File textfile = new File(path, "sinxB.txt");
@@ -47,14 +49,14 @@ public class Sinx {
 				}
 				NN.setErrorZero();
 				NN.setWeightsZero();
-				// System.out.println(NN.toString());
+				System.out.println(NN.toString());
 				for (int i = 0; i < data.length; i++) {
 					x = new double[] { i };
 					NN.learnNet(x, data[i]);
-					// System.out.println(NN.toStringX());
+					//System.out.println(NN.toStringX());
 					NN.setError(NN.getLayerLastSolution(), data[i]);
 					System.out.println("Iteracja zew: " + k + " Iteracja wew: "
-							+ i + " " + " Wart. otrzymana: "
+							+ i + " " + " probka: " + x[0] + " Wart. otrzymana: "
 							+ NN.getLayerLastSolution() + " Wart. ocze: "
 							+ data[i]);
 				}
@@ -64,8 +66,9 @@ public class Sinx {
 					NN.updateLearnRate();
 				}
 				System.out.println("WSP UCZENIA: " + NN.getLearnRate());
+				GS.makeGradSprzez(NN);
 				// adaptacyjny dobor wspolcz uczenia
-				NN.updateWeightsInLayers(); // jaka kolejnosc?
+				//NN.updateWeightsInLayers(); // jaka kolejnosc?
 				err = NN.getError();
 				System.out.println("Iteracja zew: " + k
 						+ " BLAD SREDNIOKWADR.: " + err);
@@ -93,9 +96,9 @@ public class Sinx {
 		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
 			if (i == 0) {
-				data[i] = 1;
+				data[i] = 100;
 			} else if (i != 0) {
-				data[i] = Math.sin(i) / i;
+				data[i] = 100*Math.sin(i) / i;
 			}
 		}
 		return data;
