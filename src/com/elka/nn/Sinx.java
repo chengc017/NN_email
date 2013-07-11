@@ -12,7 +12,7 @@ import java.util.List;
 public class Sinx {
 	private static float[] data;
 	private static final int FROM = 0;
-	private static final int TO = 100;
+	private static final int TO = 50;
 	private static final int NUM_LAYERS = 2;
 	private static final int ITER = 5000;
 	public static final float DX = 15.0f/(TO-1);
@@ -39,7 +39,7 @@ public class Sinx {
 		/*----- NADAWANIE NA SZTYWNO WAG DLA NEURONOW WEJSCIOWYCH----------*/
 		
 		
-		/*List<float[]> FL = new ArrayList<float[]>();	// lista na wagi
+		List<float[]> FL = new ArrayList<float[]>();	// lista na wagi
 		float[] newWeightsW1 = new float[2];
 		
 		float[] WN0 = new float[]{0.0392f
@@ -72,7 +72,7 @@ public class Sinx {
 		
 		
 		
-		----- NADAWANIE NA SZTYWNO WAG DLA NEURONU WYJSCIOWEGO----------
+		//----- NADAWANIE NA SZTYWNO WAG DLA NEURONU WYJSCIOWEGO----------
 		float[] newWeightsW2 = new float[]{
 				 -0.0992f
 				,0.0693f
@@ -87,10 +87,10 @@ public class Sinx {
 		int iL = 1;  // bo warstwa pierwsza
 		int iN = 0;  // bo jest jeden neuron na pozycji 0
 			
-		for (int k=0; k<newWeightsW2.length; k++) {
+		/*for (int k=0; k<newWeightsW2.length; k++) {
 				newWeightsW2[k] = k*0.13f + 0.1f;
-		}
-		NN.setWeightsByParamInLayer(iL, iN, newWeightsW2);*/
+		}*/
+		NN.setWeightsByParamInLayer(iL, iN, newWeightsW2);
 		
 		
 		
@@ -155,7 +155,7 @@ public class Sinx {
 					NN.updateLearnRate();
 				}*/
 				GS.makeGradSprzez(NN);
-				//NN.setLearnRate(MK.getParamOfMinKierunkowa(data));
+				NN.setLearnRate(MK.getParamOfMinKierunkowa(data));
 				NN.updateWeightsInLayersDIRECT();
 				System.out
 						.println("---------------------------------------------------------------------------------------");
