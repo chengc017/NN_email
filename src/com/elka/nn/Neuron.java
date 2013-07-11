@@ -3,52 +3,52 @@ package com.elka.nn;
 import java.util.Random;
 
 public class Neuron {
-	private double weights[]; // wagi wejscia neuronu
-	private double weightsChange[]; // wektor na zmiane wagi w procesie uczenia	---> g
-	private double weightsCopy[]; // kopie wag neuronu (do minimalizacji kierunkowej)
-	private double weightsChangeCopy[];
-	private double p[];
-	private double p1[];
-	private double x[]; // wektor wejsciowy (trzeba uwzglednic polaryzacje, wiec
+	private float weights[]; // wagi wejscia neuronu
+	private float weightsChange[]; // wektor na zmiane wagi w procesie uczenia	---> g
+	private float weightsCopy[]; // kopie wag neuronu (do minimalizacji kierunkowej)
+	private float weightsChangeCopy[];
+	private float p[];
+	private float p1[];
+	private float x[]; // wektor wejsciowy (trzeba uwzglednic polaryzacje, wiec
 						// z gory rozmiar o 1 wiekszy niz sam wektor)
 
-	// private double diffYD; // zmienna przechowujaca roznice y-d
+	// private float diffYD; // zmienna przechowujaca roznice y-d
 
-	private double u; // suma wagi * wektor_wejsciowy
-	private double y; // wyjscie neuronu (juz po przetworzeniu)
+	private float u; // suma wagi * wektor_wejsciowy
+	private float y; // wyjscie neuronu (juz po przetworzeniu)
 
-	public final double BETA = 1.0; // stala dla funkcji unipolarnej
+	public final float BETA = 1.0f; // stala dla funkcji unipolarnej
 
-	// public final double LEARN_CONST = 0.07; // stala uczenia sie
+	// public final float LEARN_CONST = 0.07; // stala uczenia sie
 
 	public Neuron(final int inputSize) {
 		this.y = 0;
-		this.x = new double[inputSize];
-		this.weightsChange = new double[x.length];
-		this.weightsCopy = new double[x.length];
-		this.p = new double[x.length];
-		this.p1 = new double[x.length];
-		this.weights = new double[x.length];
+		this.x = new float[inputSize];
+		this.weightsChange = new float[x.length];
+		this.weightsCopy = new float[x.length];
+		this.p = new float[x.length];
+		this.p1 = new float[x.length];
+		this.weights = new float[x.length];
 	}
 
 	public void setRandomWeights() {
 		Random generator = new Random();
-		weights = new double[x.length];
+		weights = new float[x.length];
 		for (int i = 0; i < weights.length; i++) {
-			double tmp = generator.nextDouble();
+			float tmp = generator.nextFloat();
 			//weights[i] = tmp*5;
-			weights[i] = 0.2*(-0.5+tmp)*5;
+			weights[i] = 0.2f*(-0.5f+tmp)*5f;
 		}
 	}
 
-	public void setX(double[] input) {
-		x[0] = 1.0; // polaryzacja
+	public void setX(float[] input) {
+		x[0] = 1.0f; // polaryzacja
 		for (int i = 0; i < input.length; i++) {
 			x[i + 1] = input[i];
 		}
 	}
 
-	public double getX(int i) {
+	public float getX(int i) {
 		return x[i];
 	}
 
@@ -56,23 +56,23 @@ public class Neuron {
 		return weights.length;
 	}
 
-	public double getWeight(int i) {
+	public float getWeight(int i) {
 		return weights[i];
 	}
 
-	public double getWeightChange(int i) {
+	public float getWeightChange(int i) {
 		return weightsChange[i];
 	}
 
-	public void setWeightChange(int i, double in) {
+	public void setWeightChange(int i, float in) {
 		this.weightsChange[i] = this.weightsChange[i] + in;
 	}
 
-	public double getY() {
+	public float getY() {
 		return this.y;
 	}
 
-	public void setY(double y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
@@ -80,24 +80,24 @@ public class Neuron {
 		this.y = 0;
 	}
 
-	public double getU() {
+	public float getU() {
 		return u;
 	}
 
-	public void uniActiveFunction(double arg) {
-		this.y = 1 / (1 + Math.pow(Math.E, -BETA * arg));
+	public void uniActiveFunction(float arg) {
+		this.y = (float) (1f / (1f + Math.pow(Math.E, -BETA * arg)));
 	}
 
-	public double derivUniActiveFunction() {
+	public float derivUniActiveFunction() {
 		return BETA * y * (1 - y);
 	}
 
-	public void biActiveFunction(double arg) {
-		this.y = Math.tanh(BETA * arg);
+	public void biActiveFunction(float arg) {
+		this.y = (float) Math.tanh(BETA * arg);
 	}
 
-	public double derivBiActiveFunction() {
-		return BETA * (1 - Math.pow(y, 2));
+	public float derivBiActiveFunction() {
+		return (float) (BETA * (1 - Math.pow(y, 2)));
 	}
 
 	public void setU() {
@@ -123,22 +123,22 @@ public class Neuron {
 		}
 	}
 	
-	public void setPAsGWithGradSprzez(double paramGradSprzez) { 	// param = beta * p1[i]
+	public void setPAsGWithGradSprzez(float paramGradSprzez) { 	// param = beta * p1[i]
 		for (int i=0; i<p.length; i++) {
 			p[i] = -weightsChange[i] + paramGradSprzez * p1[i];
 		}
 	}
 
-//	public double getWeightsChange(int index) {
-//		double[] tmp = new double[weightsChange.length];
+//	public float getWeightsChange(int index) {
+//		float[] tmp = new float[weightsChange.length];
 //		for (int i=0; i<weightsChange.length; i++) {
 //			tmp[i] = weightsChange[i];
 //		}
 //		return weightsChange[index];
 //	}
 	
-	public double getPElement(int index) {
-//		double[] tmp = new double[p.length];
+	public float getPElement(int index) {
+//		float[] tmp = new float[p.length];
 //		for (int i=0; i<p.length; i++) {
 //			tmp[i] = p[i];
 //		}
@@ -146,7 +146,7 @@ public class Neuron {
 		return p[index];
 	}
 	
-	public void updateWeights(double learn_rate) {
+	public void updateWeights(float learn_rate) {
 		for (int i = 0; i < weights.length; i++) {
 			weights[i] = weights[i] + learn_rate * p[i];
 		}
@@ -182,11 +182,11 @@ public class Neuron {
 		}
 	}
 	
-	public double getWeightsCopy(int i) {
+	public float getWeightsCopy(int i) {
 		return this.weightsCopy[i];
 	}
 	
-	public void updateWeightsOnCopy(double alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
+	public void updateWeightsOnCopy(float alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
 		for (int i=0; i<weights.length; i++) {
 			this.weights[i] = this.weights[i]+alfa*(-this.weightsChange[i]); // @-weightsChange = p
 		}
@@ -196,7 +196,7 @@ public class Neuron {
 	/*-------------------------------------------------------------------------------*/
 	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
 	
-	public void setWeightsByParam(double[] newWeights) {
+	public void setWeightsByParam(float[] newWeights) {
 		if (this.weights.length != newWeights.length) {
 			System.out.println("BLAD! Rozny rozmiar wag");
 		}

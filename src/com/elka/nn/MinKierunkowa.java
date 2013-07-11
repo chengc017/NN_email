@@ -6,30 +6,30 @@ import java.util.Vector;
 
 public class MinKierunkowa {
 
-	private double firstParam; 	// a
-	private double secParam;	// b
+	private float firstParam; 	// a
+	private float secParam;	// b
 	private NeuralNet Network;
-	private ArrayList<Double>[] dataList;	// tu zeby mi ladnie iterowa� w petli po kolejnych pr�bkach ;) <-- @TODO
+	private ArrayList<Float>[] dataList;	// tu zeby mi ladnie iterowa� w petli po kolejnych pr�bkach ;) <-- @TODO
 	
 	public MinKierunkowa(NeuralNet NetCopy) {
-		this.firstParam = 0.0;
-		this.secParam = 1E-7;
+		this.firstParam = 0.0f;
+		this.secParam = 1E-5f;
 		this.Network = NetCopy;
 	}
 	
-	private double goForwardMinKierunkowa(double[] data, double param) {
+	private float goForwardMinKierunkowa(float[] data, float param) {
 		//Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
 		Network.getOriginalWeights();
 		Network.updateCopyWeightsInLayers(param);
 		return Network.goThroughLearning(data);
 	}
 	
-	public double getParamOfMinKierunkowa(double[] data) {
+	public float getParamOfMinKierunkowa(float[] data) {
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
-		firstParam = 0.0;
-		secParam = 1E-7;
-		double ff1 = goForwardMinKierunkowa(data, this.firstParam);
-		double ff2 = goForwardMinKierunkowa(data, this.secParam);
+		firstParam = 0.0f;
+		secParam = 1E-5f;
+		float ff1 = goForwardMinKierunkowa(data, this.firstParam);
+		float ff2 = goForwardMinKierunkowa(data, this.secParam);
 		while (ff1 > ff2) {
 			firstParam = secParam;
 			secParam = 2*secParam;
@@ -37,8 +37,8 @@ public class MinKierunkowa {
 			ff2 = goForwardMinKierunkowa(data, this.secParam);
 		}
 		
-		double al1 = secParam - 0.613*(secParam-firstParam);
-		double al2 = 0.613*(secParam-firstParam)+firstParam;
+		float al1 = secParam - 0.613f*(secParam-firstParam);
+		float al2 = 0.613f*(secParam-firstParam)+firstParam;
 		Network.getOriginalWeights();
 		for (int i=0; i<15; i++) {
 			ff1 = goForwardMinKierunkowa(data, al2);
@@ -46,24 +46,25 @@ public class MinKierunkowa {
 			if (ff1 > ff2) {
 				secParam = al2;
 				al2 = al1;
-				al1 = 0.613*firstParam+(1-0.613)*secParam;
+				al1 = 0.613f*firstParam+(1f-0.613f)*secParam;
 			} 
 			else {
 				firstParam = al1;
 				al1 = al2;
-				al2 = 0.613*secParam+(1-0.613)*firstParam;
+				al2 = 0.613f*secParam+(1f-0.613f)*firstParam;
 			}
 			Network.getOriginalWeights();
 		}
+		Network.getOriginalWeights();
 		return secParam;
 	}
 	
-	public double getParamOfMinKierunkowa(Vector<double[]> dVec, double[] data) {
+	public float getParamOfMinKierunkowa(Vector<float[]> dVec, float[] data) {
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
-		firstParam = 0.0;
-		secParam = 1E-9;//0.001;
-		double ff1 = goForwardMinKierunkowa(dVec, data, this.firstParam);
-		double ff2 = goForwardMinKierunkowa(dVec, data, this.secParam);
+		firstParam = 0.0f;
+		secParam = 1E-9f;//0.001;
+		float ff1 = goForwardMinKierunkowa(dVec, data, this.firstParam);
+		float ff2 = goForwardMinKierunkowa(dVec, data, this.secParam);
 		while (ff1 > ff2) {
 			firstParam = secParam;
 			secParam = 2*secParam;
@@ -71,8 +72,8 @@ public class MinKierunkowa {
 			ff2 = goForwardMinKierunkowa(dVec, data, this.secParam);
 		}
 		
-		double al1 = secParam - 0.613*(secParam-firstParam);
-		double al2 = 0.613*(secParam-firstParam)+firstParam;
+		float al1 = secParam - 0.613f*(secParam-firstParam);
+		float al2 = 0.613f*(secParam-firstParam)+firstParam;
 		Network.getOriginalWeights();
 		for (int i=0; i<15; i++) {
 			ff1 = goForwardMinKierunkowa(dVec, data, al2);
@@ -80,19 +81,19 @@ public class MinKierunkowa {
 			if (ff1 > ff2) {
 				secParam = al2;
 				al2 = al1;
-				al1 = 0.613*firstParam+(1-0.613)*secParam;
+				al1 = 0.613f*firstParam+(1f-0.613f)*secParam;
 			} 
 			else {
 				firstParam = al1;
 				al1 = al2;
-				al2 = 0.613*secParam+(1-0.613)*firstParam;
+				al2 = 0.613f*secParam+(1f-0.613f)*firstParam;
 			}
 			Network.getOriginalWeights();
 		}
 		return secParam;
 	}
 	
-	private double goForwardMinKierunkowa(Vector<double[]> dVec, double[] data, double param) {
+	private float goForwardMinKierunkowa(Vector<float[]> dVec, float[] data, float param) {
 		//Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
 		Network.getOriginalWeights();
 		Network.updateCopyWeightsInLayers(param);

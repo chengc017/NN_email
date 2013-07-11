@@ -11,18 +11,18 @@ public class Binaryvec {
 	/**
 	 * @param args
 	 */
-	private static Vector<double[]> dVec;
-	private static double[] predictedOut;
+	private static Vector<float[]> dVec;
+	private static float[] predictedOut;
 	private static final int NUM_LAYERS = 2;
-	private static double err;
+	private static float err;
 	
 	private static PrintStream out;
 
 	public static void main(String[] args) {
-		dVec = new Vector<double[]>();
+		dVec = new Vector<float[]>();
 		dVec = dataSeriesVector();
 
-		predictedOut = new double[5];
+		predictedOut = new float[5];
 		predictedOut = dataSeriesOutArray();
 
 		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 4, 6, 1);
@@ -73,12 +73,12 @@ public class Binaryvec {
 					break;
 				}
 			}
-			double test2 = NN
-					.goForward(new double[] { 0.0, 1.0, 0.0, 0.0, 0.0 });
+			float test2 = NN
+					.goForward(new float[] { 0.0, 1.0, 0.0, 0.0, 0.0 });
 			System.out.println(test2);
 
-			double test3 = NN
-					.goForward(new double[] { 0.0, 0.0, 0.0, 1.0, 0.0 });
+			float test3 = NN
+					.goForward(new float[] { 0.0, 0.0, 0.0, 1.0, 0.0 });
 			System.out.println(test3);
 			out.close();
 		}
@@ -91,14 +91,14 @@ public class Binaryvec {
 
 	}
 
-	public static Vector<double[]> dataSeriesVector() {
-		double[] x1 = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
-		double[] x2 = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
-		double[] x3 = new double[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
-		double[] x4 = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
-		double[] x5 = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
+	public static Vector<float[]> dataSeriesVector() {
+		float[] x1 = new float[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
+		float[] x2 = new float[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
+		float[] x3 = new float[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
+		float[] x4 = new float[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
+		float[] x5 = new float[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
 
-		Vector<double[]> vec = new Vector<double[]>();
+		Vector<float[]> vec = new Vector<float[]>();
 
 		vec.add(x1);
 		vec.add(x2);
@@ -108,13 +108,13 @@ public class Binaryvec {
 		return vec;
 	}
 
-	public static double[] dataSeriesOutArray() {
-		double[] out = new double[5];
-		double d1 = 1.0;
-		double d2 = 0.0;
-		double d3 = 1.0;
-		double d4 = 1.0;
-		double d5 = 0.0;
+	public static float[] dataSeriesOutArray() {
+		float[] out = new float[5];
+		float d1 = 1.0;
+		float d2 = 0.0;
+		float d3 = 1.0;
+		float d4 = 1.0;
+		float d5 = 0.0;
 		out[0] = d1;
 		out[1] = d2;
 		out[2] = d3;
