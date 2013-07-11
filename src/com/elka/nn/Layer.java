@@ -19,7 +19,7 @@ public class Layer {
 		neurons = new Neuron[size];
 		for (int i = 0; i < neurons.length; i++) {
 			neurons[i] = new Neuron(inputSize);
-			//neurons[i].setRandomWeights();
+			neurons[i].setRandomWeights();
 		}
 	}
 
@@ -133,19 +133,28 @@ public class Layer {
 		}
 	}*/
 
-	public void updateWeightsInNeuronsLayer(float learn_rate) { // tu przez argument przekazywac wartosc
+	/*----------------------------- SAMO USTAWIENIE P --------------------------------*/
+	
+	public void updateWeightsInNeuronsLayer() { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.makeCopyOFP();
 			n.setPAsG();
+			//n.updateWeights(learn_rate);
+		}
+	}
+	
+	/*----------------------- METODA TYLKO UAKTUALNIAJACA JUZ USTAWIONE P----------------*/
+	public void updateWeightsInNeuronsLayerDIRECT(float learn_rate) { // tu przez argument przekazywac wartosc
+		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.updateWeights(learn_rate);
 		}
 	}
 	
-	public void updateWeightsInNeuronsLayerGradSprzez(float learn_rate, float paramGradSprzez) { // tu przez argument przekazywac wartosc
+	public void updateWeightsInNeuronsLayerGradSprzez(float paramGradSprzez) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.makeCopyOFP();
 			n.setPAsGWithGradSprzez(paramGradSprzez);
-			n.updateWeights(learn_rate);
+			//n.updateWeights(learn_rate);
 		}
 	}
 	

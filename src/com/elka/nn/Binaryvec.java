@@ -25,14 +25,14 @@ public class Binaryvec {
 		predictedOut = new float[5];
 		predictedOut = dataSeriesOutArray();
 
-		NeuralNet NN = new NeuralNet(0.001, NUM_LAYERS, 4, 6, 1);
+		NeuralNet NN = new NeuralNet(0.001f, NUM_LAYERS, 4, 6, 1);
 		
 		GradSprzez GS = new GradSprzez();
 		MinKierunkowa MK = new MinKierunkowa(NN);
 
 		try {
 			if (System.getProperty("os.name").startsWith("Linux")) {
-				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX_mingrd_1.txt"));	
+				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/BINARY_VEC.txt"));	
 			} else if (System.getProperty("os.name").startsWith("Windows")) {
 				String path = System.getProperty("user.home");
 				File textfile = new File(path, "sinxB_GS_MINK.txt");
@@ -59,13 +59,16 @@ public class Binaryvec {
 				/*if (k > 5) {
 					NN.updateLearnRate();
 				}*/
-				NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
-				GS.makeGradSprzez(NN);
+				//NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
+				
 				System.out.println("WSP UCZENIA: " + NN.getLearnRate());
 				//NN.updateWeightsInLayers();
 				err = NN.getError();
 				System.out.println("Iteracja zew: " + k
 						+ " BLAD SREDNIOKWADR.: " + err);
+				GS.makeGradSprzez(NN);
+				//NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
+				NN.updateWeightsInLayersDIRECT();
 				System.out
 						.println("---------------------------------------------------------------------------------------");
 				if (err  < 0.00001) {
@@ -74,11 +77,11 @@ public class Binaryvec {
 				}
 			}
 			float test2 = NN
-					.goForward(new float[] { 0.0, 1.0, 0.0, 0.0, 0.0 });
+					.goForward(new float[] { 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
 			System.out.println(test2);
 
 			float test3 = NN
-					.goForward(new float[] { 0.0, 0.0, 0.0, 1.0, 0.0 });
+					.goForward(new float[] { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
 			System.out.println(test3);
 			out.close();
 		}
@@ -92,11 +95,11 @@ public class Binaryvec {
 	}
 
 	public static Vector<float[]> dataSeriesVector() {
-		float[] x1 = new float[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
-		float[] x2 = new float[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
-		float[] x3 = new float[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
-		float[] x4 = new float[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
-		float[] x5 = new float[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
+		float[] x1 = new float[] { 1.0f, 1.0f, 1.0f, 0.0f, 0.0f };
+		float[] x2 = new float[] { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f };
+		float[] x3 = new float[] { 1.0f, 0.0f, 1.0f, 0.0f, 0.0f };
+		float[] x4 = new float[] { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+		float[] x5 = new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
 		Vector<float[]> vec = new Vector<float[]>();
 
@@ -110,11 +113,11 @@ public class Binaryvec {
 
 	public static float[] dataSeriesOutArray() {
 		float[] out = new float[5];
-		float d1 = 1.0;
-		float d2 = 0.0;
-		float d3 = 1.0;
-		float d4 = 1.0;
-		float d5 = 0.0;
+		float d1 = 1.0f;
+		float d2 = 0.0f;
+		float d3 = 1.0f;
+		float d4 = 1.0f;
+		float d5 = 0.0f;
 		out[0] = d1;
 		out[1] = d2;
 		out[2] = d3;

@@ -150,7 +150,10 @@ public class NeuralNet {
 		}
 	}
 	
-	
+	public void updateWeightsInLayersDIRECT() {
+		layers[1].updateWeightsInNeuronsLayerDIRECT(this.learnRate);
+		layers[0].updateWeightsInNeuronsLayerDIRECT(this.learnRate);
+	}
 
 	public void updateWeightsInLayers() { // jako argument dac wart wsp uczenia
 											// sie
@@ -160,8 +163,10 @@ public class NeuralNet {
 		// for (int i=layers.length;i<0;i--) {
 
 		// }
-		layers[1].updateWeightsInNeuronsLayer(this.learnRate);
-		layers[0].updateWeightsInNeuronsLayer(this.learnRate);
+		/*layers[1].updateWeightsInNeuronsLayer(this.learnRate);
+		layers[0].updateWeightsInNeuronsLayer(this.learnRate);*/
+		layers[1].updateWeightsInNeuronsLayer();
+		layers[0].updateWeightsInNeuronsLayer();
 	}
 	
 	public void updateWeightsInLayersGradSprzez(float paramGradSprzez) { // jako argument dac wart wsp uczenia
@@ -172,8 +177,10 @@ public class NeuralNet {
 		// for (int i=layers.length;i<0;i--) {
 
 		// }
-		layers[1].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
-		layers[0].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+		/*layers[1].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+		layers[0].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);*/
+		layers[1].updateWeightsInNeuronsLayerGradSprzez(paramGradSprzez);
+		layers[0].updateWeightsInNeuronsLayerGradSprzez(paramGradSprzez);
 	}
 	
 	public void updateCopyWeightsInLayers(float alfa) {

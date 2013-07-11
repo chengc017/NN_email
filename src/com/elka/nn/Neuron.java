@@ -37,7 +37,7 @@ public class Neuron {
 		for (int i = 0; i < weights.length; i++) {
 			float tmp = generator.nextFloat();
 			//weights[i] = tmp*5;
-			weights[i] = 0.2f*(-0.5f+tmp)*5f;
+			weights[i] = 0.2f*(-0.5f+tmp);//*5f;
 		}
 	}
 
@@ -188,7 +188,7 @@ public class Neuron {
 	
 	public void updateWeightsOnCopy(float alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
 		for (int i=0; i<weights.length; i++) {
-			this.weights[i] = this.weights[i]+alfa*(-this.weightsChange[i]); // @-weightsChange = p
+			this.weights[i] = this.weights[i]+alfa*(-this.p[i]); // @-weightsChange = p
 		}
 	}
 	
