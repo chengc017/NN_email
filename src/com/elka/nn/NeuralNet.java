@@ -23,7 +23,7 @@ public class NeuralNet {
 	private final double PD = 0.7;
 	private final double PI = 1.05;
 
-	private Layer[] layers;
+	protected Layer[] layers;
 
 	/**
 	 * 
@@ -145,6 +145,8 @@ public class NeuralNet {
 			l.setNeuronsWeightsToZero();
 		}
 	}
+	
+	
 
 	public void updateWeightsInLayers() { // jako argument dac wart wsp uczenia
 											// sie
@@ -230,11 +232,20 @@ public class NeuralNet {
 		}
 		return tmp;
 	}
+	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
+	/* Ustalenie wag @newWeights w warstwie @indexL i neuronie @indexN---------------*/
+	public void setWeightsByParamInLayer(int indexL, int indexN, double[] newWeights) {
+		layers[indexL].neurons[indexN].setWeightsByParam(newWeights);
+	}
+	
 
 	@Override
 	public String toString() {
 		String out;
-		out = layers[0].toString("Ukryta: ");
+		out = "WAGI NA WEJSCIU DANEJ ITERACJI ZEWNETRZNEJ: \n";
+		out += layers[0].toString("Ukryta: ");
 		out += layers[1].toString("Wyjsciowa: ");
 		return out;
 	}

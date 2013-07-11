@@ -28,6 +28,7 @@ public class Neuron {
 		this.weightsCopy = new double[x.length];
 		this.p = new double[x.length];
 		this.p1 = new double[x.length];
+		this.weights = new double[x.length];
 	}
 
 	public void setRandomWeights() {
@@ -192,11 +193,24 @@ public class Neuron {
 	}
 	
 	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
+	
+	public void setWeightsByParam(double[] newWeights) {
+		if (this.weights.length != newWeights.length) {
+			System.out.println("BLAD! Rozny rozmiar wag");
+		}
+		for (int i=0; i<weights.length; i++) {
+			this.weights[i] = newWeights[i];
+		}
+	}
+	
 	@Override
 	public String toString() {
-		String output = "w: \n";
+		//String output = "w: \n";
+		String output = "";
 		for (int i = 0; i < weights.length; i++) {
-			output += weights[i] + " ";
+			output += "W[" + i + "] " + weights[i] + " \n";
 		}
 		return output;
 	}

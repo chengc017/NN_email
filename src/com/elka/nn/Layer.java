@@ -19,7 +19,7 @@ public class Layer {
 		neurons = new Neuron[size];
 		for (int i = 0; i < neurons.length; i++) {
 			neurons[i] = new Neuron(inputSize);
-			neurons[i].setRandomWeights();
+			//neurons[i].setRandomWeights();
 		}
 	}
 
@@ -205,7 +205,14 @@ public class Layer {
 		return tmp;
 	}
 	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
 	
+	public void setWeightsByParamInNeurons(double[] newWeights) {
+		for (Neuron n : this.neurons) {
+			n.setWeightsByParam(newWeights);
+		}
+	}
 	
 	
 	public String toString(String layersName) {
