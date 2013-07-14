@@ -8,7 +8,7 @@ public class LayerOutput extends Layer implements LayerFunc {
 	}
 
 	@Override
-	public void startLayerOutput(float[] inputX) {
+	public void startLayerOutput(double[] inputX) {
 		for (Neuron n : neurons) {
 			n.setX(inputX);
 			n.setU();
@@ -18,7 +18,7 @@ public class LayerOutput extends Layer implements LayerFunc {
 	}
 
 	@Override
-	public void setLastLayersError(float target) {
+	public void setLastLayersError(double target) {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				n.setWeightChange(i, 2 * (n.getY() - target) * n.getX(i)); // to

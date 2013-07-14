@@ -1,7 +1,7 @@
 package com.elka.nn;
 
 public interface LayerFunc {
-	public void startLayerOutput(float[] inputX);
+	public void startLayerOutput(double[] inputX);
 
-	public void setLastLayersError(float target);
+	public void setLastLayersError(double target);
 }

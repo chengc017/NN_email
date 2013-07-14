@@ -6,21 +6,21 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class SinXCosX {
-	private static float[] data;
+	private static double[] data;
 	private static final int FROM = 0;
 	private static final int TO = 50;
 	private static final int NUM_LAYERS = 2;
 
-	private static float[] x;
-	private static float err;
+	private static double[] x;
+	private static double err;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		x = new float[1];
-		data = new float[TO - FROM];
+		x = new double[1];
+		data = new double[TO - FROM];
 		data = dataSeriesSXCX(FROM, TO);
 		// data = dataSeries(FROM, TO);
 		NeuralNet NN = new NeuralNet(0.00001, NUM_LAYERS, 5, 3, 1); // (liczba
@@ -50,7 +50,7 @@ public class SinXCosX {
 				NN.setErrorZero();
 				NN.setWeightsZero();
 				for (int i = 0; i < data.length; i++) {
-					x = new float[] { i, i + 10 };
+					x = new double[] { i, i + 10 };
 					NN.learnNet(x, data[i]);
 					NN.setError(NN.getLayerLastSolution(), data[i]);
 					System.out.println("Iteracja zew: " + k + " Iteracja wew: "
@@ -82,12 +82,12 @@ public class SinXCosX {
 		}
 		System.out.println("Blad :" + err / 2);
 
-		float y1 = NN.goForward(new float[] { 2.5 });
+		double y1 = NN.goForward(new double[] { 2.5 });
 		System.out.println("Wynik 2.5= " + y1);
 	}
 
-	private static float[] dataSeriesSXCX(int from, int to) {
-		float[] data = new float[to - from];
+	private static double[] dataSeriesSXCX(int from, int to) {
+		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
 			data[i] = (Math.sin(i) + Math.cos(i + 10)) / 2;
 		}

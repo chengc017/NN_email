@@ -5,12 +5,12 @@ import java.util.List;
 
 public class GradSprzez {
 
-	private float licz;
-	private float mian;
-	private float beta;
+	private double licz;
+	private double mian;
+	private double beta;
 	private int licznikgs;
-	private List<Float> copyG;
-	private List<Float> copyP;
+	private List<Double> copyG;
+	private List<Double> copyP;
 	
 	
 	public GradSprzez() {
@@ -18,8 +18,8 @@ public class GradSprzez {
 		this.mian = 0.0f;
 		this.licznikgs = 0;
 		this.beta = 0.0f;
-		List<Float> copyG = new ArrayList<Float>();
-		List<Float> copyP = new ArrayList<Float>();
+		List<Double> copyG = new ArrayList<Double>();
+		List<Double> copyP = new ArrayList<Double>();
 	}
 	
 	public void makeGradSprzez(NeuralNet Network) {
@@ -41,12 +41,12 @@ public class GradSprzez {
 		beta = licz/mian;
 	}
 	
-	private float getBeta() {
+	private double getBeta() {
 		return beta;
 	}
 	
 	private void getLicznik(NeuralNet Network) {
-		List<Float> tmpLicz = new ArrayList<Float>();
+		List<Double> tmpLicz = new ArrayList<Double>();
 		tmpLicz = Network.getWeightsChangeTable();
 		licz = 0;
 		for (int i=0; i<tmpLicz.size(); i++) {

@@ -19,11 +19,11 @@ public class Layer {
 		neurons = new Neuron[size];
 		for (int i = 0; i < neurons.length; i++) {
 			neurons[i] = new Neuron(inputSize);
-			neurons[i].setRandomWeights();
+			//neurons[i].setRandomWeights();
 		}
 	}
 
-	public void startLayer(float[] inputX, boolean tryb) {
+	public void startLayer(double[] inputX, boolean tryb) {
 		for (Neuron n : neurons) {
 			n.setX(inputX);
 			n.setU();
@@ -39,12 +39,12 @@ public class Layer {
 		}
 	}
 
-	public float getLastSolution() {
+	public double getLastSolution() {
 		return neurons[0].getY();
 	}
 
-	public float[] getLayerOutput() {
-		float[] out = new float[neurons.length]; //
+	public double[] getLayerOutput() {
+		double[] out = new double[neurons.length]; //
 		for (int i = 0; i < out.length; i++) {
 			out[i] = neurons[i].getY();
 		}
@@ -65,7 +65,7 @@ public class Layer {
 
 	
 	// tu jest brane n.getY bo wyj�ciowy neuron jest tylko jeden, dlatego brane jest jego Y.
-	public void setLastLayersError(float target) {
+	public void setLastLayersError(double target) {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
@@ -81,7 +81,7 @@ public class Layer {
 		}
 	}
 	
-/*	public void setLastLayersError(float target, float paramGradSprzez) {		// paraGradSprzezony = beta*p1[i]
+/*	public void setLastLayersError(double target, double paramGradSprzez) {		// paraGradSprzezony = beta*p1[i]
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
@@ -101,15 +101,15 @@ public class Layer {
 	 * @TODO trzeba zmienic wzor na blad warstwy ukrytej
 	 */
 
-	public void setLayersError(Layer outputLayer, float target) { // usuniete 2* w zmiennej in
+	public void setLayersError(Layer outputLayer, double target) { // usuniete 2* w zmiennej in
 		for (Neuron neuOut : outputLayer.neurons) {
 			for (int i = 0; i < this.neurons.length; i++) {
 				for (int j = 0; j < this.neurons[i].getWeightsSize(); j++) {
-					// float in =
+					// double in =
 					// 2*(neuOut.getY()-target)*(neuOut.getWeight(i+1)*neurons[i].derivUniActiveFunction()*neurons[i].getX(j));
 					// // i+1 bo zerowa waga dla polaryzacji, a my mamy jakby
 					// zerowy neuron jako pierwszy
-					float in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
+					double in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
 							* neurons[i].derivBiActiveFunction() * neurons[i].getX(j));
 					this.neurons[i].setWeightChange(j, in);
 				}
@@ -117,15 +117,15 @@ public class Layer {
 		}
 	}
 	
-/*	public void setLayersError(Layer outputLayer, float target, float paramGradSprzez) { // usuniete 2* w zmiennej in
+/*	public void setLayersError(Layer outputLayer, double target, double paramGradSprzez) { // usuniete 2* w zmiennej in
 		for (Neuron neuOut : outputLayer.neurons) {
 			for (int i = 0; i < this.neurons.length; i++) {
 				for (int j = 0; j < this.neurons[i].getWeightsSize(); j++) {
-					// float in =
+					// double in =
 					// 2*(neuOut.getY()-target)*(neuOut.getWeight(i+1)*neurons[i].derivUniActiveFunction()*neurons[i].getX(j));
 					// // i+1 bo zerowa waga dla polaryzacji, a my mamy jakby
 					// zerowy neuron jako pierwszy
-					float in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
+					double in = (neuOut.getY() - target) * (neuOut.getWeight(i + 1)
 							* neurons[i].derivBiActiveFunction() * neurons[i].getX(j));
 					this.neurons[i].setWeightChange(j, in + paramGradSprzez);
 				}
@@ -144,13 +144,13 @@ public class Layer {
 	}
 	
 	/*----------------------- METODA TYLKO UAKTUALNIAJACA JUZ USTAWIONE P----------------*/
-	public void updateWeightsInNeuronsLayerDIRECT(float learn_rate) { // tu przez argument przekazywac wartosc
+	public void updateWeightsInNeuronsLayerDIRECT(double learn_rate) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.updateWeights(learn_rate);
 		}
 	}
 	
-	public void updateWeightsInNeuronsLayerGradSprzez(float paramGradSprzez) { // tu przez argument przekazywac wartosc
+	public void updateWeightsInNeuronsLayerGradSprzez(double paramGradSprzez) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.makeCopyOFP();
 			n.setPAsGWithGradSprzez(paramGradSprzez);
@@ -170,7 +170,7 @@ public class Layer {
 		}
 	}
 	
-	public void updateCopyWeightsInNeuronsLayer(float alfa) {
+	public void updateCopyWeightsInNeuronsLayer(double alfa) {
 		for (Neuron n : neurons) {
 			n.updateWeightsOnCopy(alfa);
 		}
@@ -183,9 +183,9 @@ public class Layer {
 	}
 	
 	
-	public List<Float> getWeightsChangeLayer() {
-//		float[] tmp = new float[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
-		List<Float> tmp = new ArrayList<Float>();
+	public List<Double> getWeightsChangeLayer() {
+//		double[] tmp = new double[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
+		List<Double> tmp = new ArrayList<Double>();
 //		for (int i=0; i<neurons.length*neurons[0].getWeightsSize(); i++) {
 //			for (Neuron n : neurons) {
 //				for (int k=0; k<neurons[0].getWeightsSize(); k++) {
@@ -201,10 +201,10 @@ public class Layer {
 		return tmp;
 	}
 	
-	public List<Float> getPElementLayer() {
-//		float[] tmp = new float[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
+	public List<Double> getPElementLayer() {
+//		double[] tmp = new double[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
 //		for (int i=0; i<neurons.length*neurons[0].getWeightsSize(); i++) {
-		List<Float> tmp = new ArrayList<Float>();
+		List<Double> tmp = new ArrayList<Double>();
 		for (Neuron n : neurons) {
 			for (int k=0; k<n.getWeightsSize(); k++) {
 				tmp.add(n.getPElement(k));
@@ -217,7 +217,7 @@ public class Layer {
 	/*-------------------------------------------------------------------------------*/
 	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
 	
-	public void setWeightsByParamInNeurons(float[] newWeights) {
+	public void setWeightsByParamInNeurons(double[] newWeights) {
 		for (Neuron n : this.neurons) {
 			n.setWeightsByParam(newWeights);
 		}
@@ -251,10 +251,10 @@ public class Layer {
 	/*public static void main(String[] args) {
 		Layer hidden = new Layer(2, 6);
 		Layer output = new Layer(1, 3);
-		float[] input = new float[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
+		double[] input = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
 
 		// hidden.startLayer(input);
-		float[] outVec = hidden.getLayerOutput();
+		double[] outVec = hidden.getLayerOutput();
 		for (int i = 0; i < outVec.length; i++) {
 			System.out.println(outVec[i]);
 		}

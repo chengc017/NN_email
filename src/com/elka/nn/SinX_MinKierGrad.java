@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class SinX_MinKierGrad {
-	private static float[] data;
+	private static double[] data;
 	private static final int FROM = 0;
 	private static final int TO = 101;
 	private static final int NUM_LAYERS = 2;
 
-	// private static float[] x;
-	private static float err;
+	// private static double[] x;
+	private static double err;
 	private static PrintStream out;
 
 	/**
@@ -20,8 +20,8 @@ public class SinX_MinKierGrad {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		float[] x = new float[1];
-		data = new float[TO - FROM];
+		double[] x = new double[1];
+		data = new double[TO - FROM];
 		data = dataSeries(FROM, TO);
 		// data = dataSeries(FROM, TO);
 		NeuralNet NN = new NeuralNet(0.05, NUM_LAYERS, 15, 2, 1);
@@ -53,7 +53,7 @@ public class SinX_MinKierGrad {
 				NN.setWeightsZero();
 				//System.out.println(NN.toString());
 				for (int i = 0; i < data.length; i++) {
-					x = (i == 0) || (i == 1) ? new float[] { 0.1+0.15*(i) } : new float[] { 0.1+0.15*(i-1) } ;
+					x = (i == 0) || (i == 1) ? new double[] { 0.1+0.15*(i) } : new double[] { 0.1+0.15*(i-1) } ;
 					NN.learnNet(x, data[i]);
 					//System.out.println(NN.toStringX());
 					NN.setError(NN.getLayerLastSolution(), data[i]);
@@ -91,14 +91,14 @@ public class SinX_MinKierGrad {
 		}
 		System.out.println("Blad :" + err / 2);
 
-		float y1 = NN.goForward(new float[] { 2.5 });
+		double y1 = NN.goForward(new double[] { 2.5 });
 		System.out.println("Wynik 2.5= " + y1);
 	}
 
-	private static float[] dataSeries(int from, int to) {
-		//float dx = 15.0/100.0;
-		float x;
-		float[] data = new float[to - from];
+	private static double[] dataSeries(int from, int to) {
+		//double dx = 15.0/100.0;
+		double x;
+		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
 			if (i == 0 || i == 1) {
 				x = 0.1+0.15*(i);
@@ -112,8 +112,8 @@ public class SinX_MinKierGrad {
 		return data;
 	}
 	/*
-	private static float[] dataSeriesEX(int from, int to) {
-		float[] data = new float[to - from];
+	private static double[] dataSeriesEX(int from, int to) {
+		double[] data = new double[to - from];
 		for (int i = from; i < to; i++) {
 			data[i] = (Math.pow(Math.E, i));
 		}
