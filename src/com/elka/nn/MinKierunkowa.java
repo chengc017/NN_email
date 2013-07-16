@@ -1,6 +1,5 @@
 package com.elka.nn;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -10,6 +9,9 @@ public class MinKierunkowa {
 	private double firstParam; 	// a
 	private double secParam;	// b
 	private NeuralNet Network;
+	
+	private final double GOLDEN_PARAM = 0.61803398;
+	private final double EPS = 0.000001;
 	//private ArrayList<double>[] dataList;	// tu zeby mi ladnie iterowa� w petli po kolejnych pr�bkach ;) <-- @TODO
 	
 	public MinKierunkowa(NeuralNet NetCopy) {
@@ -29,6 +31,7 @@ public class MinKierunkowa {
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
 		firstParam = 0.0;
 		secParam = 1E-5;
+		//secParam = 0.00001;
 		double ff1 = goForwardMinKierunkowa(data, this.firstParam);
 		double ff2 = goForwardMinKierunkowa(data, this.secParam);
 		while (ff1 > ff2) {
@@ -39,27 +42,33 @@ public class MinKierunkowa {
 		}
 		
 		double al1 = secParam - 0.613*(secParam-firstParam);
-		double al2 = 0.613*(secParam-firstParam)+firstParam;
+		double al2 = firstParam + 0.613*(secParam-firstParam);
 		Network.getOriginalWeights();
-		for (int i=0; i<3; i++) {
+		for (int i=0; i<15; i++) {
+		//while ((secParam-firstParam) > EPS) {
 			ff1 = goForwardMinKierunkowa(data, al2);
 			ff2 = goForwardMinKierunkowa(data, al1);
-			if (i == 2) {
+			/*if (i == 2) {
 				System.out.println("FF1: " + ff1 + " FF2: " + ff2);
-			}
+			}*/
 			if (ff1 > ff2) {
 				secParam = al2;
 				al2 = al1;
 				al1 = 0.613*firstParam+(1-0.613)*secParam;
+				//al1 = 0.613*firstParam+(1-0.613)*secParam;
+//				al1 = secParam - GOLDEN_PARAM * (secParam - firstParam);
 			}
 			else {
 				firstParam = al1;
 				al1 = al2;
 				al2 = 0.613*secParam+(1-0.613)*firstParam;
+				//al2 = 0.613*secParam+(1-0.613)*firstParam;]
+//				al2 = firstParam + GOLDEN_PARAM * (secParam - firstParam);
 			}
 			Network.getOriginalWeights();
 		}
 		Network.getOriginalWeights();
+		//double ret = (firstParam + secParam)/2.0;
 		System.out.println("WSP ZWRACANY PRZEZ MIN KIER: " + secParam);
 		return secParam;
 	}
@@ -103,11 +112,6 @@ public class MinKierunkowa {
 		Network.getOriginalWeights();
 		Network.updateCopyWeightsInLayers(param);
 		return Network.goThroughLearning(dVec, data);
-	}
-
-	private double roundTwoDecimals(double d) {
-        DecimalFormat twoDForm = new DecimalFormat("#.##########");
-        return Double.valueOf(twoDForm.format(d));
 	}
 
 	

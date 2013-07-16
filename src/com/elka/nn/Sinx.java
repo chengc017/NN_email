@@ -130,7 +130,7 @@ public class Sinx {
 				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/DEBUG_SINX_proba.txt"));	
 			} else if (System.getProperty("os.name").startsWith("Windows")) {
 				String path = System.getProperty("user.home");
-				File textfile = new File(path, "TEST_MIN_KIER.txt");
+				File textfile = new File(path, "TEST_MIN_KIER_gold.txt");
 				out = new PrintStream(new FileOutputStream(textfile));
 			} else {
 				System.out.println("Nie wiem jaki system - ERROR");
