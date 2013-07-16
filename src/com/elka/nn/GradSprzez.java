@@ -14,10 +14,10 @@ public class GradSprzez {
 	
 	
 	public GradSprzez() {
-		this.licz = 0.0;
-		this.mian = 0.0;
+		this.licz = 0.0f;
+		this.mian = 0.0f;
 		this.licznikgs = 0;
-		this.beta = 0.0;
+		this.beta = 0.0f;
 		List<Double> copyG = new ArrayList<Double>();
 		List<Double> copyP = new ArrayList<Double>();
 	}

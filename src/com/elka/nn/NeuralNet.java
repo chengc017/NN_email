@@ -19,11 +19,14 @@ public class NeuralNet {
 	private double prevError;
 	private double learnRate;
 
-	private final double KW = 1.04;
-	private final double PD = 0.7;
-	private final double PI = 1.05;
+	private final double KW = 1.01f;
+	private final double PD = 0.7f;
+	private final double PI = 1.01f;
+	
+	private static final int TO = 10;
+	public static final double DX = 15.0f/(TO-1);
 
-	private Layer[] layers;
+	protected Layer[] layers;
 
 	/**
 	 * 
@@ -79,9 +82,10 @@ public class NeuralNet {
 			System.out.println("Rozmiar wektora wejsciowego != wektora z danymi");
 			return -1;
 		}*/
+		double[] x = new double[1];
 		setErrorZero();
 		for (int i = 0; i < data.length; i++) {
-			double[] x = new double[] { (double)i };
+			x = new double[] { 0.1f+DX*i };
 			//learnNet(x, data[i]);
 			// System.out.println(NN.toStringX());
 			setError(goForward(x), data[i]);
@@ -125,7 +129,7 @@ public class NeuralNet {
 	*/
 	
 	public void setError(double y, double d) { // blad sredniokwadratowy sieci
-		this.error = this.error + 0.5*((y - d) * (y - d));
+		this.error = this.error + 0.5f*((y - d) * (y - d));
 	}
 
 	public void setErrorZero() {
@@ -145,6 +149,11 @@ public class NeuralNet {
 			l.setNeuronsWeightsToZero();
 		}
 	}
+	
+	public void updateWeightsInLayersDIRECT() {
+		layers[1].updateWeightsInNeuronsLayerDIRECT(this.learnRate);
+		layers[0].updateWeightsInNeuronsLayerDIRECT(this.learnRate);
+	}
 
 	public void updateWeightsInLayers() { // jako argument dac wart wsp uczenia
 											// sie
@@ -154,8 +163,10 @@ public class NeuralNet {
 		// for (int i=layers.length;i<0;i--) {
 
 		// }
-		layers[1].updateWeightsInNeuronsLayer(this.learnRate);
-		layers[0].updateWeightsInNeuronsLayer(this.learnRate);
+		/*layers[1].updateWeightsInNeuronsLayer(this.learnRate);
+		layers[0].updateWeightsInNeuronsLayer(this.learnRate);*/
+		layers[1].updateWeightsInNeuronsLayer();
+		layers[0].updateWeightsInNeuronsLayer();
 	}
 	
 	public void updateWeightsInLayersGradSprzez(double paramGradSprzez) { // jako argument dac wart wsp uczenia
@@ -166,8 +177,10 @@ public class NeuralNet {
 		// for (int i=layers.length;i<0;i--) {
 
 		// }
-		layers[1].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
-		layers[0].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+		/*layers[1].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);
+		layers[0].updateWeightsInNeuronsLayerGradSprzez(this.learnRate, paramGradSprzez);*/
+		layers[1].updateWeightsInNeuronsLayerGradSprzez(paramGradSprzez);
+		layers[0].updateWeightsInNeuronsLayerGradSprzez(paramGradSprzez);
 	}
 	
 	public void updateCopyWeightsInLayers(double alfa) {
@@ -195,7 +208,7 @@ public class NeuralNet {
 	}
 
 	public void updateLearnRate() {
-		if (this.error > Math.sqrt(KW) * this.prevError) {
+		if (this.error > (Math.sqrt(KW) * this.prevError)) {
 			this.learnRate = PD * this.learnRate;
 		} else {
 			this.learnRate = PI * this.learnRate;
@@ -230,11 +243,20 @@ public class NeuralNet {
 		}
 		return tmp;
 	}
+	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
+	/* Ustalenie wag @newWeights w warstwie @indexL i neuronie @indexN---------------*/
+	public void setWeightsByParamInLayer(int indexL, int indexN, double[] newWeights) {
+		layers[indexL].neurons[indexN].setWeightsByParam(newWeights);
+	}
+	
 
 	@Override
 	public String toString() {
 		String out;
-		out = layers[0].toString("Ukryta: ");
+		out = "WAGI NA WEJSCIU DANEJ ITERACJI ZEWNETRZNEJ: \n";
+		out += layers[0].toString("Ukryta: ");
 		out += layers[1].toString("Wyjsciowa: ");
 		return out;
 	}

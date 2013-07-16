@@ -19,7 +19,7 @@ public class Layer {
 		neurons = new Neuron[size];
 		for (int i = 0; i < neurons.length; i++) {
 			neurons[i] = new Neuron(inputSize);
-			neurons[i].setRandomWeights();
+			//neurons[i].setRandomWeights();
 		}
 	}
 
@@ -69,7 +69,7 @@ public class Layer {
 		for (Neuron n : neurons) {
 			for (int i = 0; i < n.getWeightsSize(); i++) {
 				if (i == 0) {
-					n.setWeightChange(i, (n.getY() - target) * 1.0); 
+					n.setWeightChange(i, (n.getY() - target) * 1.0f); 
 					// usuniete 2* przed nawaisem, tak samo u dolu
 				} else {
 					n.setWeightChange(i, (n.getY() - target) * n.getX(i)); 
@@ -133,19 +133,28 @@ public class Layer {
 		}
 	}*/
 
-	public void updateWeightsInNeuronsLayer(double learn_rate) { // tu przez argument przekazywac wartosc
+	/*----------------------------- SAMO USTAWIENIE P --------------------------------*/
+	
+	public void updateWeightsInNeuronsLayer() { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.makeCopyOFP();
 			n.setPAsG();
+			//n.updateWeights(learn_rate);
+		}
+	}
+	
+	/*----------------------- METODA TYLKO UAKTUALNIAJACA JUZ USTAWIONE P----------------*/
+	public void updateWeightsInNeuronsLayerDIRECT(double learn_rate) { // tu przez argument przekazywac wartosc
+		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.updateWeights(learn_rate);
 		}
 	}
 	
-	public void updateWeightsInNeuronsLayerGradSprzez(double learn_rate, double paramGradSprzez) { // tu przez argument przekazywac wartosc
+	public void updateWeightsInNeuronsLayerGradSprzez(double paramGradSprzez) { // tu przez argument przekazywac wartosc
 		for (Neuron n : neurons) { 								 // wsp uczenia
 			n.makeCopyOFP();
 			n.setPAsGWithGradSprzez(paramGradSprzez);
-			n.updateWeights(learn_rate);
+			//n.updateWeights(learn_rate);
 		}
 	}
 	
@@ -205,7 +214,14 @@ public class Layer {
 		return tmp;
 	}
 	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
 	
+	public void setWeightsByParamInNeurons(double[] newWeights) {
+		for (Neuron n : this.neurons) {
+			n.setWeightsByParam(newWeights);
+		}
+	}
 	
 	
 	public String toString(String layersName) {
@@ -232,7 +248,7 @@ public class Layer {
 		return output;
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		Layer hidden = new Layer(2, 6);
 		Layer output = new Layer(1, 3);
 		double[] input = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
@@ -244,5 +260,5 @@ public class Layer {
 		}
 		// output.startLayer(outVec);
 		System.out.println(output.toString("wyjsciowa"));
-	}
+	}*/
 }

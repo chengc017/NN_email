@@ -17,7 +17,7 @@ public class Neuron {
 	private double u; // suma wagi * wektor_wejsciowy
 	private double y; // wyjscie neuronu (juz po przetworzeniu)
 
-	public final double BETA = 1.0; // stala dla funkcji unipolarnej
+	public final double BETA = 1.0f; // stala dla funkcji unipolarnej
 
 	// public final double LEARN_CONST = 0.07; // stala uczenia sie
 
@@ -28,6 +28,7 @@ public class Neuron {
 		this.weightsCopy = new double[x.length];
 		this.p = new double[x.length];
 		this.p1 = new double[x.length];
+		this.weights = new double[x.length];
 	}
 
 	public void setRandomWeights() {
@@ -36,12 +37,12 @@ public class Neuron {
 		for (int i = 0; i < weights.length; i++) {
 			double tmp = generator.nextDouble();
 			//weights[i] = tmp*5;
-			weights[i] = 0.2*(-0.5+tmp)*5;
+			weights[i] = 0.2f*(-0.5f+tmp);//*5f;
 		}
 	}
 
 	public void setX(double[] input) {
-		x[0] = 1.0; // polaryzacja
+		x[0] = 1.0f; // polaryzacja
 		for (int i = 0; i < input.length; i++) {
 			x[i + 1] = input[i];
 		}
@@ -84,7 +85,7 @@ public class Neuron {
 	}
 
 	public void uniActiveFunction(double arg) {
-		this.y = 1 / (1 + Math.pow(Math.E, -BETA * arg));
+		this.y = (double) (1f / (1f + Math.pow(Math.E, -BETA * arg)));
 	}
 
 	public double derivUniActiveFunction() {
@@ -92,11 +93,11 @@ public class Neuron {
 	}
 
 	public void biActiveFunction(double arg) {
-		this.y = Math.tanh(BETA * arg);
+		this.y = (double) Math.tanh(BETA * arg);
 	}
 
 	public double derivBiActiveFunction() {
-		return BETA * (1 - Math.pow(y, 2));
+		return (double) (BETA * (1 - Math.pow(y, 2)));
 	}
 
 	public void setU() {
@@ -187,16 +188,29 @@ public class Neuron {
 	
 	public void updateWeightsOnCopy(double alfa) {	// robie to na w_i bo ono jest podpiete pod goForward
 		for (int i=0; i<weights.length; i++) {
-			this.weights[i] = this.weights[i]+alfa*(-this.weightsChange[i]); // @-weightsChange = p
+			this.weights[i] = this.weights[i]+alfa*(this.p[i]); // @-weightsChange = p
 		}
 	}
 	
 	
+	/*-------------------------------------------------------------------------------*/
+	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
+	
+	public void setWeightsByParam(double[] newWeights) {
+		if (this.weights.length != newWeights.length) {
+			System.out.println("BLAD! Rozny rozmiar wag");
+		}
+		for (int i=0; i<weights.length; i++) {
+			this.weights[i] = newWeights[i];
+		}
+	}
+	
 	@Override
 	public String toString() {
-		String output = "w: \n";
+		//String output = "w: \n";
+		String output = "";
 		for (int i = 0; i < weights.length; i++) {
-			output += weights[i] + " ";
+			output += "W[" + i + "] " + weights[i] + " \n";
 		}
 		return output;
 	}
