@@ -27,7 +27,7 @@ public class SenderAnalyzer {
 		int[] intTab = new int[arr.length];
 		for (int i=0; i<arr.length; i++) {
 			//System.out.println(has2Digits(arr[i]));
-			intTab[i] = has2Digits(arr[i]);
+			intTab[i] = hasXDigits(arr[i], 5);
 		}
 		return intTab;
 	}
@@ -36,13 +36,13 @@ public class SenderAnalyzer {
 		this.listOfSubWords.add(element);
 	}
 	
-	public int has2Digits(String str){
+	public int hasXDigits(String str, int howMany){
 		int count = 0;
 		if (str!=null) {
 			for (char c : str.toCharArray()) {
 				if (Character.isDigit(c))
 					count++;
-				if (count >= 2)
+				if (count >= howMany)
 					return 1;
 			}
 		}
