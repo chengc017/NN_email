@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 public class MailReader {
 
@@ -70,6 +71,13 @@ public class MailReader {
 		return message;
 	}
 	
+	public boolean isImageIn(String str) {
+		if (str.contains("<img src"))
+			return true;
+		else
+			return false;
+	}
+	
 	
 	/**
 	 * @param args
@@ -79,10 +87,12 @@ public class MailReader {
 		
 	public static void main(String[] args) throws MessagingException, IOException {
 		// TODO Auto-generated method stub
-		String path = "D:\\SPAM_EML\\email6.eml";
+//		String path = "D:\\SPAM_EML\\email6.eml";
+		String path = "/home/lukasz/Pulpit/Buty.eml";
 		MailReader MR = new MailReader(path);
 		String ret = MR.getText(MR.message);
 		System.out.println(ret);
+		System.out.println(ret.contains("<img src"));
 	}
 
 }

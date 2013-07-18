@@ -25,9 +25,12 @@ public class HTMLmessage {
 		return isTextHTML ? 1 : 0;
 	}
 	
-	private void analyzeParts(Part p) throws MessagingException, IOException {
+	private boolean analyzeParts(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             isTextHTML = p.isMimeType("text/html");
+            if (isTextHTML) {
+            	return true;
+            }
         }
 
         if (p.isMimeType("multipart/alternative")) {
@@ -41,7 +44,9 @@ public class HTMLmessage {
                         analyzeParts(bp);
                     continue;
                 } else if (bp.isMimeType("text/html")) {
-                    analyzeParts(bp);
+                    //analyzeParts(bp);
+                	isTextHTML = true;
+                	return isTextHTML;
                 } else {
                     analyzeParts(bp);
                 }
@@ -52,6 +57,7 @@ public class HTMLmessage {
                 analyzeParts(mp.getBodyPart(i));
             }
         }
+        return isTextHTML;
     } 
 	
 	/**
@@ -61,7 +67,8 @@ public class HTMLmessage {
 	 */
 	public static void main(String[] args) throws MessagingException, IOException {
 		// TODO Auto-generated method stub
-		String path = "D:\\SPAM_EML\\email2.eml";
+		//String path = "D:\\SPAM_EML\\email2.eml";
+		String path = "/home/lukasz/Pulpit/But		y.eml";
 		MailReader MR = new MailReader(path);
 		HTMLmessage Hmess = new HTMLmessage(MR);
 		//Hmess.isHTML();

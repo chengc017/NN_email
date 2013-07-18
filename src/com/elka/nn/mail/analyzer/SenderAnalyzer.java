@@ -14,7 +14,7 @@ public class SenderAnalyzer {
 	private MailReader mail;
 	private List<String> listOfSubWords;
 	
-	//@TODO Tu trzeba bedzie wczytywac te liste s³ów z pliku zeby to jakos ladnie miedzy wywolaniami przenosic
+	//@TODO Tu trzeba bedzie wczytywac te liste sï¿½ï¿½w z pliku zeby to jakos ladnie miedzy wywolaniami przenosic
 	
 	public SenderAnalyzer(MailReader mess) {
 		this.mail = mess;
@@ -66,7 +66,8 @@ public class SenderAnalyzer {
 	 */
 	public static void main(String[] args) throws FileNotFoundException, MessagingException {
 		// TODO Auto-generated method stub
-		String path = "D:\\SPAM_EML\\email2.eml";
+		//String path = "D:\\SPAM_EML\\email2.eml";
+		String path = "/home/lukasz/Pulpit/Buty.eml";
 		MailReader MR = new MailReader(path);
 		SenderAnalyzer SA = new SenderAnalyzer(MR);
 		int[] tmp = SA.analyzeSender();
