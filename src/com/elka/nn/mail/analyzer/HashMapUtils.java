@@ -2,6 +2,7 @@ package com.elka.nn.mail.analyzer;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class HashMapUtils {
 //	private File inFile;
 	private BufferedReader in;
 	private FileWriter fw;
+	private String[] wordsArray = new String[50];
 
 	public HashMapUtils() {
 //		this.inFile = new File(path);
@@ -60,17 +62,20 @@ public class HashMapUtils {
 							// copying...
 							String word = str.substring(idx1 + 1, i);
 							word = word.toLowerCase();
-
-							// Check if word is in HashMap
-							if (wordcount.containsKey(word)) {
-								// get number of occurrences for this word
-								// increment it
-								// and put back again
-								wordcount.put(word, wordcount.get(word) + 1);
-							} else {
-								// this is first time we see this word, set
-								// value '1'
-								wordcount.put(word, 1);
+							
+							// zabezpiecznie przed przedimkami typu a, in, do itp...
+							if (word.length() > 2) {					
+								// Check if word is in HashMap
+								if (wordcount.containsKey(word)) {
+									// get number of occurrences for this word
+									// increment it
+									// and put back again
+									wordcount.put(word, wordcount.get(word) + 1);
+								} else {
+									// this is first time we see this word, set
+									// value '1'
+									wordcount.put(word, 1);
+								}
 							}
 						}
 
@@ -122,6 +127,28 @@ public class HashMapUtils {
 	    	e.printStackTrace();
 	    }
 	}
+	
+	public void readHashMapFromFile(File inputFile) throws IOException {
+		String[] tmpArray = new String[2];
+		int i = 0;
+		try {
+			in = new BufferedReader(new FileReader(inputFile));
+			String str;
+			while ((str = in.readLine()) != null) {
+				str = str.toLowerCase();
+				tmpArray = str.split(":");			// do tymczasowej tablicy wyrzucam przeczytany wiersz
+				wordsArray[i] = tmpArray[0];		// i biore pierwszy element (klucz)
+				i++;
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String[] getWordsArray() {
+		return wordsArray;
+	}
 
 	/**
 	 * @param args
@@ -131,10 +158,15 @@ public class HashMapUtils {
 		// TODO Auto-generated method stub
 		String dirPath = "C:\\Users\\Lukasz\\Desktop\\test_hash.txt";
 		String outPath = "C:\\Users\\Lukasz\\Desktop\\out2.txt";
-//		HashMapUtils HMU = new HashMapUtils(outPath);
+		HashMapUtils HMU = new HashMapUtils();
 //		HMU.getCountedList(dirPath);
 		File inFile = new File(outPath); 
 //		HMU.sortHashMapByValues();
+		HMU.readHashMapFromFile(inFile);
+		String[] tmp = HMU.getWordsArray();
+		for (String el : tmp) {
+			System.out.println(el);
+		}
 	}
 
 }

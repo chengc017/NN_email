@@ -29,7 +29,7 @@ public class MailReader {
 		message = new MimeMessage(mailSession, source);
 	}
 	
-	private String getText(Part p) throws MessagingException, IOException {
+	public String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             String s = (String)p.getContent();
             textIsHtml = p.isMimeType("text/html");
