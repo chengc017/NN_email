@@ -71,11 +71,12 @@ public class MailReader {
 		return message;
 	}
 	
-	public boolean isImageIn(String str) {
-		if (str.contains("<img src"))
-			return true;
-		else
-			return false;
+	public int isImageIn(String str) {
+		return str.contains("<img src") ? 1 : 0;
+	}
+	
+	public int isLinkIn(String str) {
+		return str.contains("<a href") ? 1 : 0;
 	}
 	
 	
@@ -93,6 +94,7 @@ public class MailReader {
 		String ret = MR.getText(MR.message);
 		System.out.println(ret);
 		System.out.println(ret.contains("<img src"));
+		System.out.println(MR.isLinkIn(ret));
 	}
 
 }

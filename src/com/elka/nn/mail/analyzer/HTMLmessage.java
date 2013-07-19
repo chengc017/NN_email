@@ -68,7 +68,7 @@ public class HTMLmessage {
 	public static void main(String[] args) throws MessagingException, IOException {
 		// TODO Auto-generated method stub
 		//String path = "D:\\SPAM_EML\\email2.eml";
-		String path = "/home/lukasz/Pulpit/But		y.eml";
+		String path = "/home/lukasz/Pulpit/Buty.eml";
 		MailReader MR = new MailReader(path);
 		HTMLmessage Hmess = new HTMLmessage(MR);
 		//Hmess.isHTML();

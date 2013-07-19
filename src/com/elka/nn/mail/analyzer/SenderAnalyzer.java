@@ -12,9 +12,6 @@ public class SenderAnalyzer {
 
 
 	private MailReader mail;
-	private List<String> listOfSubWords;
-	
-	//@TODO Tu trzeba bedzie wczytywac te liste s��w z pliku zeby to jakos ladnie miedzy wywolaniami przenosic
 	
 	public SenderAnalyzer(MailReader mess) {
 		this.mail = mess;
@@ -23,18 +20,22 @@ public class SenderAnalyzer {
 	public int[] analyzeSender() throws MessagingException {
 		Address s = mail.getMessage().getFrom()[0];
 		String addr_str = s.toString();
-		String[] arr = addr_str.split("[\\s@<>]");
+		String[] arr = addr_str.split("[\\s@<>.]");
 		int[] intTab = new int[arr.length];
 		for (int i=0; i<arr.length; i++) {
-			//System.out.println(has2Digits(arr[i]));
+			System.out.println(arr[i]);
 			intTab[i] = hasXDigits(arr[i], 5);
 		}
 		return intTab;
 	}
 	
-	public void addNewElementToList(String element) {
-		this.listOfSubWords.add(element);
-	}
+	
+	/**
+	 * 
+	 * @param str		badany string
+	 * @param howMany	ilosc cyfr zawartych w warunku sprawdzenia
+	 * @return			1 on true, 0 on false
+	 */
 	
 	public int hasXDigits(String str, int howMany){
 		int count = 0;
@@ -45,6 +46,21 @@ public class SenderAnalyzer {
 				if (count >= howMany)
 					return 1;
 			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * @param str 		string badany (sender mail address)
+	 * @param domain	wprowadzona badana domena
+	 * @return			1 on true, 0 on false
+	 * @throws MessagingException 
+	 */
+	
+	public int hasDomain(String domain) throws MessagingException {
+		String str = mail.getMessage().getFrom()[0].toString();
+		if (str!=null) {
+			return str.contains(domain) ? 1 : 0;
 		}
 		return 0;
 	}
@@ -72,6 +88,7 @@ public class SenderAnalyzer {
 		SenderAnalyzer SA = new SenderAnalyzer(MR);
 		int[] tmp = SA.analyzeSender();
 		int ret = SA.returnTheBiggestVal(tmp);
+		System.out.println("has domain: " + SA.hasDomain(".net"));
 		System.out.println(ret);
 	}
 

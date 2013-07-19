@@ -12,11 +12,11 @@ public class SubjectAnalyzer {
 	private MailReader mail;
 	private List<String> listOfSubWords;
 	
-	//@TODO Tu trzeba bedzie wczytywac te liste s³ów z pliku zeby to jakos ladnie miedzy wywolaniami przenosic
+	//@TODO Tu trzeba bedzie wczytywac te liste sï¿½ï¿½w z pliku zeby to jakos ladnie miedzy wywolaniami przenosic
 	
 	public SubjectAnalyzer(MailReader mess) {
 		this.mail = mess;
-		this.listOfSubWords = new ArrayList<String>(Arrays.asList("dollar", "euro"));
+		this.listOfSubWords = new ArrayList<String>();
 	}
 	
 	public int analyzeSubject() throws MessagingException {
