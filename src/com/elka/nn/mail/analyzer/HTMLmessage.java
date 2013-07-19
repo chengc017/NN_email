@@ -3,6 +3,7 @@ package com.elka.nn.mail.analyzer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -10,10 +11,16 @@ import javax.mail.Part;
 public class HTMLmessage {
 
 	private MailReader mail;
+	private Message p;
 	private boolean isTextHTML = false;
 	
 	public HTMLmessage(MailReader mess) {
 		mail = mess;
+//		p = mail.getMessage();
+	}
+	
+	public MailReader getMail() {
+		return mail;
 	}
 	
 	public void isHTML() throws MessagingException {
@@ -25,7 +32,7 @@ public class HTMLmessage {
 		return isTextHTML ? 1 : 0;
 	}
 	
-	private boolean analyzeParts(Part p) throws MessagingException, IOException {
+	public boolean analyzeParts(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             isTextHTML = p.isMimeType("text/html");
             if (isTextHTML) {
