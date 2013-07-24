@@ -12,12 +12,16 @@ public class MinKierunkowa {
 	
 	private final double GOLDEN_PARAM = 0.61803398;
 	private final double EPS = 0.000001;
+	
+	private int file_count;
+	
 	//private ArrayList<double>[] dataList;	// tu zeby mi ladnie iterowa� w petli po kolejnych pr�bkach ;) <-- @TODO
 	
 	public MinKierunkowa(NeuralNet NetCopy) {
 		this.firstParam = 0.0;
 		this.secParam = 1E-5;
 		this.Network = NetCopy;
+		this.file_count = 0;
 	}
 	
 	private double goForwardMinKierunkowa(double[] data, double param) {
@@ -28,29 +32,56 @@ public class MinKierunkowa {
 	}
 	
 	public double getParamOfMinKierunkowa(double[] data) {
+		// Stworzenie plikow do rysowania wykresiku
+		String filename_a = "/home/lukasz/Pulpit/test_a_" + this.file_count + ".m";
+		String filename_b = "/home/lukasz/Pulpit/test_b_" + this.file_count + ".m";
+		this.file_count++;
+		
+		ChartDrawer cd_a = new ChartDrawer(filename_a);
+		ChartDrawer cd_b = new ChartDrawer(filename_b);
+		
+		cd_b.writeToFile("clear all;");
+		
 		Network.makeOriginalWeightsCopy();			// zeby mi oryginalne wagi nie zniknely
 		firstParam = 0.0;
 		secParam = 1E-5;
 		//secParam = 0.00001;
 		double ff1 = goForwardMinKierunkowa(data, this.firstParam);
 		double ff2 = goForwardMinKierunkowa(data, this.secParam);
+		String onePoint_ff1 = "y(" + this.firstParam + ")=" + ff1 + ";";
+		String onePoint_ff2 = "y(" + this.secParam + ")=" + ff2 + ";";
+		cd_a.writeToFile(onePoint_ff1);
+		cd_a.writeToFile(onePoint_ff2);
 		while (ff1 > ff2) {
 			firstParam = secParam;
 			secParam = 2*secParam;
 			ff1 = goForwardMinKierunkowa(data, this.firstParam);
 			ff2 = goForwardMinKierunkowa(data, this.secParam);
+			// wpisywanie do pliku (wykres)
+			onePoint_ff1 = "y(" + this.firstParam + ")=" + ff1 + ";";
+			onePoint_ff2 = "y(" + this.secParam + ")=" + ff2 + ";";
+			cd_a.writeToFile(onePoint_ff1);
+			cd_a.writeToFile(onePoint_ff2);
 		}
+		// dodanie polecenia rysuajcego plot
+		cd_a.addPlotDefs();
 		
 		double al1 = secParam - 0.613*(secParam-firstParam);
 		double al2 = firstParam + 0.613*(secParam-firstParam);
 		Network.getOriginalWeights();
-		for (int i=0; i<15; i++) {
+		for (int i=0; i<45; i++) {
 		//while ((secParam-firstParam) > EPS) {
 			ff1 = goForwardMinKierunkowa(data, al2);
 			ff2 = goForwardMinKierunkowa(data, al1);
 			/*if (i == 2) {
 				System.out.println("FF1: " + ff1 + " FF2: " + ff2);
 			}*/
+			int k = i+1;
+			onePoint_ff1 = "krok(" + k + ")=" + al2 + ";" + " y(" + k + ")=" + ff1 + ";";
+			onePoint_ff2 = "krok_b(" + k + ")=" + al1 + ";" + " z(" + k + ")=" + ff1 + ";";
+			cd_b.writeToFile(onePoint_ff1);
+			//cd_b.writeToFile(onePoint_ff2);
+			
 			if (ff1 > ff2) {
 				secParam = al2;
 				al2 = al1;
@@ -68,6 +99,7 @@ public class MinKierunkowa {
 			Network.getOriginalWeights();
 		}
 		Network.getOriginalWeights();
+		cd_b.addPlotDefs();
 		//double ret = (firstParam + secParam)/2.0;
 		System.out.println("WSP ZWRACANY PRZEZ MIN KIER: " + secParam);
 		return secParam;

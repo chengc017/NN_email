@@ -14,7 +14,7 @@ public class Sinx {
 	private static final int FROM = 0;
 	private static final int TO = 10;
 	private static final int NUM_LAYERS = 2;
-	private static final int ITER = 100;
+	private static final int ITER = 10;
 	public static final double DX = 15.0/(TO-1);
 	
 	
@@ -92,7 +92,7 @@ public class Sinx {
 		}
 		NN.setWeightsByParamInLayer(iL, iN, newWeightsW2);*/
 		
-/*----- NADAWANIE NA SZTYWNO WAG DLA NEURONU WYJSCIOWEGO----------*/
+/*----- NADAWANIE NA SZTYWNO WAG DLA NEURONU WEJSCIOWEGO----------*/
 		
 		double[] newWeightsW1 = new double[2];
 		int w1L = 0;
