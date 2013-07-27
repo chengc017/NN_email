@@ -64,7 +64,7 @@ public class SinX_MinKierGrad {
 				}
 				//System.out.println(NN.toStringWCH());
 				// System.out.println("WSP UCZENIA: " + NN.getLearnRate());
-				NN.setLearnRate(MK.getParamOfMinKierunkowa(data));
+				NN.setLearnRate(MK.getParamOfMinKierunkowa(data, false));
 				/*if (k > 5) {
 					NN.updateLearnRate();
 				}*/

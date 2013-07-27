@@ -19,9 +19,9 @@ public class NeuralNet {
 	private double prevError;
 	private double learnRate;
 
-	private final double KW = 1.01f;
-	private final double PD = 0.7f;
-	private final double PI = 1.01f;
+	private final double KW = 1.01;
+	private final double PD = 0.7;
+	private final double PI = 1.01;
 	
 	private static final int TO = 10;
 	public static final double DX = 15.0f/(TO-1);

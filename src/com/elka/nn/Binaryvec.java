@@ -27,6 +27,28 @@ public class Binaryvec {
 
 		NeuralNet NN = new NeuralNet(0.001f, NUM_LAYERS, 4, 6, 1);
 		
+		double[] newWeightsW1 = new double[6];
+		int w1L = 0;
+		for (int iN=0; iN<NN.layers[w1L].neurons.length; iN++) {
+			for (int k=0; k<newWeightsW1.length; k++) {
+					newWeightsW1[k] = (iN+1)*0.07 + k*0.2;
+			}
+			NN.setWeightsByParamInLayer(w1L, iN, newWeightsW1);
+		}
+		
+		
+		
+		/*----- NADAWANIE NA SZTYWNO WAG DLA NEURONU WYJSCIOWEGO----------*/
+		double[] newWeightsW2 = new double[5];
+		
+		int iL = 1;  // bo warstwa pierwsza
+		int iN = 0;  // bo jest jeden neuron na pozycji 0
+			
+		for (int k=0; k<newWeightsW2.length; k++) {
+				newWeightsW2[k] = k*0.13 + 0.1;
+		}
+		NN.setWeightsByParamInLayer(iL, iN, newWeightsW2);
+		
 		GradSprzez GS = new GradSprzez();
 		MinKierunkowa MK = new MinKierunkowa(NN);
 
@@ -41,7 +63,7 @@ public class Binaryvec {
 				System.out.println("Nie wiem jaki system - ERROR");
 			}
 			System.setOut(out);
-			for (int k = 0; k < 5000; k++) {
+			for (int k = 0; k < 3000; k++) {
 				/*if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
@@ -67,7 +89,7 @@ public class Binaryvec {
 				System.out.println("Iteracja zew: " + k
 						+ " BLAD SREDNIOKWADR.: " + err);
 				GS.makeGradSprzez(NN);
-				//NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
+				NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
 				NN.updateWeightsInLayersDIRECT();
 				System.out
 						.println("---------------------------------------------------------------------------------------");
