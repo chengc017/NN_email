@@ -19,7 +19,7 @@ public class Layer {
 		neurons = new Neuron[size];
 		for (int i = 0; i < neurons.length; i++) {
 			neurons[i] = new Neuron(inputSize);
-			//neurons[i].setRandomWeights();
+			neurons[i].setRandomWeights();
 		}
 	}
 

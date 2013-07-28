@@ -25,7 +25,7 @@ public class Binaryvec {
 		predictedOut = new double[5];
 		predictedOut = dataSeriesOutArray();
 
-		NeuralNet NN = new NeuralNet(0.001f, NUM_LAYERS, 4, 6, 1);
+		NeuralNet NN = new NeuralNet(0.1, NUM_LAYERS, 3, 6, 1);
 		
 		double[] newWeightsW1 = new double[6];
 		int w1L = 0;
@@ -57,13 +57,14 @@ public class Binaryvec {
 				out = new PrintStream(new FileOutputStream("/home/lukasz/Pulpit/BINARY_VEC.txt"));	
 			} else if (System.getProperty("os.name").startsWith("Windows")) {
 				String path = System.getProperty("user.home");
-				File textfile = new File(path, "sinxB_GS_MINK.txt");
+				File textfile = new File(path, "sinxB_GS_MINK_BIN.txt");
 				out = new PrintStream(new FileOutputStream(textfile));
 			} else {
 				System.out.println("Nie wiem jaki system - ERROR");
+				System.exit(1);
 			}
 			System.setOut(out);
-			for (int k = 0; k < 3000; k++) {
+			for (int k = 0; k < 1500; k++) {
 				/*if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
