@@ -19,7 +19,7 @@ public class MailReader {
 	private InputStream source;
 	private MimeMessage message; 
 	
-	private boolean textIsHtml = false;
+//	private boolean textIsHtml = false;
 	
 	public MailReader(String mailPath) throws FileNotFoundException, MessagingException {
 		emlFile = new File(mailPath);
@@ -32,10 +32,9 @@ public class MailReader {
 	public String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
             String s = (String)p.getContent();
-            textIsHtml = p.isMimeType("text/html");
+//            textIsHtml = p.isMimeType("text/html");
             return s;
         }
-
         if (p.isMimeType("multipart/alternative")) {
             // prefer html text over plain text
             Multipart mp = (Multipart)p.getContent();
