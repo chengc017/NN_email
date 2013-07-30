@@ -39,6 +39,10 @@ class FileTreeModel implements TreeModel {
   protected File root;
   public FileTreeModel(File root) { this.root = root; }
 
+  public void setRoot(File root) {
+	  this.root = root;
+  }
+  
   // The model knows how to return the root object of the tree
   public Object getRoot() { return root; }
 
