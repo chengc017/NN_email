@@ -24,7 +24,7 @@ public class HashMapUtils {
 		this.fw = null;
 	}
 
-	public void getCountedList(String filePath) throws IOException {
+	public void getCountedList(File filePath) throws IOException {
 
 		try {
 
