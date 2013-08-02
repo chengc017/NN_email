@@ -104,7 +104,7 @@ public class MainFrame {
 		panel.setLayout(null);
 
 		textField = new JTextField();
-		textField.setBounds(10, 11, 483, 20);
+		textField.setBounds(10, 11, 483, 30);
 		textField.setForeground(Color.red.darker());
 		textField.setText("Nie wczytano słów!");
 		textField.setEditable(false);
@@ -113,46 +113,47 @@ public class MainFrame {
 
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(509, 11, 491, 20);
+		textField_1.setBounds(509, 11, 491, 30);
 		textField_1.setForeground(Color.red.darker());
 		textField_1.setText("Nie wczytano wag!");
 		textField_1.setEditable(false);
 		panel.add(textField_1);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(208, 115, 394, 20);
+		textField_2.setBounds(208, 115, 444, 20);
 		panel.add(textField_2);
 		textField_2.setColumns(10);
 
 		JButton btnWczytajSowaZ = new JButton("Wczytaj s\u0142owa z pliku");
-		btnWczytajSowaZ.setBounds(10, 42, 164, 23);
+		btnWczytajSowaZ.setBounds(10, 52, 154, 23);
 		btnWczytajSowaZ.addActionListener(new LoadWordsWithJFC());
 		panel.add(btnWczytajSowaZ);
 
 		JButton btnZapiszSowaZ = new JButton("Zapisz s\u0142owa z analizy");
-		btnZapiszSowaZ.setBounds(184, 42, 164, 23);
+		btnZapiszSowaZ.setBounds(174, 52, 155, 23);
 		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
 
 		JButton btnWczytajWagiZ = new JButton("Wczytaj wagi z pliku");
-		btnWczytajWagiZ.setBounds(612, 42, 188, 23);
+		btnWczytajWagiZ.setBounds(507, 52, 145, 23);
 		btnWczytajWagiZ.addActionListener(new OpenWeightsFromFileWithJFC());
 		panel.add(btnWczytajWagiZ);
 
-		JButton btnZapiszSowaDo = new JButton("Zapisz wagi do pliku");
-		btnZapiszSowaDo.setBounds(812, 42, 188, 23);
-		panel.add(btnZapiszSowaDo);
+		JButton btnZapiszWagiDo = new JButton("Zapisz wagi do pliku");
+		btnZapiszWagiDo.addActionListener(new SaveWeightsToFileWithJFC());
+		btnZapiszWagiDo.setBounds(662, 52, 164, 23);
+		panel.add(btnZapiszWagiDo);
 
 		String btnlbl = "<html>" + "Analizuj wiadomo\u015Bci" + "<br>"
 				+ "w wybranej lokalizacji" + "</html>";
 		JButton btnAnalizujWiadomociW = new JButton(btnlbl);
-		btnAnalizujWiadomociW.setBounds(812, 87, 188, 48);
+		btnAnalizujWiadomociW.setBounds(836, 87, 164, 48);
 		panel.add(btnAnalizujWiadomociW);
 
 		JButton btnAnalizujZaznaczonWiadomo = new JButton("<html>"
 				+ "Analizuj zaznaczon\u0105" + "<br>" + "wiadomo\u015B\u0107"
 				+ "</html>");
-		btnAnalizujZaznaczonWiadomo.setBounds(612, 87, 188, 48);
+		btnAnalizujZaznaczonWiadomo.setBounds(662, 87, 164, 48);
 		panel.add(btnAnalizujZaznaczonWiadomo);
 
 		JButton btnWybierzLokalizacj = new JButton("Wybierz lokalizacj\u0119");
@@ -160,6 +161,14 @@ public class MainFrame {
 		btnWybierzLokalizacj.setBounds(10, 114, 188, 23);
 		
 		panel.add(btnWybierzLokalizacj);
+		
+		JButton btnWykonajAnalizSw = new JButton("Wykonaj analiz\u0119 s\u0142\u00F3w");
+		btnWykonajAnalizSw.setBounds(339, 52, 154, 23);
+		panel.add(btnWykonajAnalizSw);
+		
+		JButton btnNauczSiedobierz = new JButton("Naucz sie\u0107 (dobierz wagi)");
+		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
+		panel.add(btnNauczSiedobierz);
 
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
@@ -223,16 +232,18 @@ public class MainFrame {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					textField.setForeground(Color.red.darker());
+					textField.setText("Niepoprawnie wczytano słowa!");
 				}
 				try {
-					doc.insertString(0, "Wczytane s�owa: \n ", null);
+					doc.insertString(doc.getLength(), "Wczytane słowa: \n ", null);
 					for (String el : hsu.getWordsArray()) {
 						doc.insertString(doc.getLength()-1, el + "\n", null);
 					}
+					doc.insertString(doc.getLength(), "\n ------------------- \n ", null);
 				}
 				catch(Exception e_doc) {
-					textField.setForeground(Color.red.darker());
-					textField.setText("Niepoprawnie wczytano słowa!");
+					e_doc.printStackTrace();
 				}
 				textField.setForeground(Color.green.darker());
 				textField.setText("Poprawnie wczytano słowa!");
@@ -281,10 +292,11 @@ public class MainFrame {
 					wu.loadWeightsFromFile(toOpen);
 					textField_1.setForeground(Color.green.darker());
 					textField_1.setText("Poprawnie wczytano wagi!");
-					doc.insertString(0, "Wczytane wagi: \n ", null);
+					doc.insertString(doc.getLength(), "Wczytane wagi:\n ", null);
 					for (Double element : wu.getWeightsList()) {
-						doc.insertString(doc.getLength(), element.toString() + " ", null);
+						doc.insertString(doc.getLength(), element.toString() + ", ", null);
 					}
+					doc.insertString(doc.getLength(), "\n ------------------- \n ", null);
 				} catch (Exception e3) {
 					e3.printStackTrace();
 					textField_1.setForeground(Color.red.darker());
@@ -295,4 +307,26 @@ public class MainFrame {
 		
 	}
 	
+	public class SaveWeightsToFileWithJFC implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser jfcSaveWeights = new JFileChooser();
+			jfcSaveWeights.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int saveRet = jfcSaveWeights.showSaveDialog(frame);
+			if (saveRet == JFileChooser.APPROVE_OPTION) {
+				File toSave = jfcSaveWeights.getSelectedFile();
+				try {
+				wu.writeWeightsToFile(toSave);
+				textField_1.setForeground(Color.green.darker());
+				textField_1.setText(textField_1.getText() + "||" + "Poprawnie zapisano wagi");
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					textField_1.setForeground(Color.red.darker());
+					textField_1.setText(textField_1.getText() + "||" + "Niepoprawnie wczytano wagi!");
+				}
+			}
+		}
+		
+	}
 } // main class
