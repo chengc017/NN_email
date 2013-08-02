@@ -60,6 +60,10 @@ public class Neuron {
 	public double getWeight(int i) {
 		return weights[i];
 	}
+	
+	public void setWeight(double weight, int i) {
+		this.weights[i] = weight;
+	}
 
 	public double getWeightChange(int i) {
 		return weightsChange[i];

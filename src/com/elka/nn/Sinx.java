@@ -159,7 +159,9 @@ public class Sinx {
 					NN.updateLearnRate();
 				}*/
 				NN.setLearnRate(MK.getParamOfMinKierunkowa(data, false));
-				NN.updateWeightsInLayersDIRECT();
+				NN.updateWeightsInLayersDIRECT();		// TU ZEBY UZYWAC ADAPTACYJNEGO TRZEBA
+														// JESZCZE DAC UPDATEWEIGHTSINLAYERS (czyli ustawienie p jako -g)
+														// DLATEGO ADAPTACYJNY SIE JEBAL
 				System.out
 						.println("---------------------------------------------------------------------------------------");
 				if (err < 0.00001) {

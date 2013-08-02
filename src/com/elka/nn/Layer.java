@@ -135,8 +135,8 @@ public class Layer {
 
 	/*----------------------------- SAMO USTAWIENIE P --------------------------------*/
 	
-	public void updateWeightsInNeuronsLayer() { // tu przez argument przekazywac wartosc
-		for (Neuron n : neurons) { 								 // wsp uczenia
+	public void updateWeightsInNeuronsLayer() {
+		for (Neuron n : neurons) { 								 
 			n.makeCopyOFP();
 			n.setPAsG();
 			//n.updateWeights(learn_rate);
@@ -208,6 +208,19 @@ public class Layer {
 		for (Neuron n : neurons) {
 			for (int k=0; k<n.getWeightsSize(); k++) {
 				tmp.add(n.getPElement(k));
+			}
+		}
+//		}
+		return tmp;
+	}
+	
+	public List<Double> getWeightsInLayers() {
+//		double[] tmp = new double[neurons.length*neurons[0].getWeightsSize()];   // robie miejsce na tablice wag dla kazdego neuronu
+//		for (int i=0; i<neurons.length*neurons[0].getWeightsSize(); i++) {
+		List<Double> tmp = new ArrayList<Double>();
+		for (Neuron n : neurons) {
+			for (int k=0; k<n.getWeightsSize(); k++) {
+				tmp.add(n.getWeight(k));
 			}
 		}
 //		}

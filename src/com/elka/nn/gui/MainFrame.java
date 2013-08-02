@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.text.StyledDocument;
 
+import com.elka.nn.WeightsUtils;
 import com.elka.nn.mail.analyzer.HashMapUtils;
 
 import java.awt.event.ActionListener;
@@ -44,6 +46,9 @@ public class MainFrame {
 	private JTree tree;
 	
 	private StyledDocument doc;
+	
+	private HashMapUtils hsu = null;
+	private WeightsUtils wu = null;
 
 	/**
 	 * Launch the application.
@@ -77,6 +82,8 @@ public class MainFrame {
 	 * Create the application.
 	 */
 	public MainFrame() {
+		hsu = new HashMapUtils();
+		wu = new WeightsUtils();
 		initialize();
 	}
 
@@ -86,7 +93,7 @@ public class MainFrame {
 	private void initialize() {
 		frame = new JFrame("Neural Network Mail Analyzer");
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 1000, 750);
+		frame.setBounds(100, 100, 1000, 600);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -99,7 +106,8 @@ public class MainFrame {
 		textField = new JTextField();
 		textField.setBounds(10, 11, 483, 20);
 		textField.setForeground(Color.red.darker());
-		textField.setText("Nie wczytano s≥Ûw!");
+		textField.setText("Nie wczytano s≈Ç√≥w!");
+		textField.setEditable(false);
 		panel.add(textField);
 		textField.setColumns(10);
 
@@ -108,6 +116,7 @@ public class MainFrame {
 		textField_1.setBounds(509, 11, 491, 20);
 		textField_1.setForeground(Color.red.darker());
 		textField_1.setText("Nie wczytano wag!");
+		textField_1.setEditable(false);
 		panel.add(textField_1);
 
 		textField_2 = new JTextField();
@@ -116,20 +125,18 @@ public class MainFrame {
 		textField_2.setColumns(10);
 
 		JButton btnWczytajSowaZ = new JButton("Wczytaj s\u0142owa z pliku");
-		btnWczytajSowaZ.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnWczytajSowaZ.setBounds(10, 42, 164, 23);
 		btnWczytajSowaZ.addActionListener(new LoadWordsWithJFC());
 		panel.add(btnWczytajSowaZ);
 
 		JButton btnZapiszSowaZ = new JButton("Zapisz s\u0142owa z analizy");
 		btnZapiszSowaZ.setBounds(184, 42, 164, 23);
+		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
 
 		JButton btnWczytajWagiZ = new JButton("Wczytaj wagi z pliku");
 		btnWczytajWagiZ.setBounds(612, 42, 188, 23);
+		btnWczytajWagiZ.addActionListener(new OpenWeightsFromFileWithJFC());
 		panel.add(btnWczytajWagiZ);
 
 		JButton btnZapiszSowaDo = new JButton("Zapisz wagi do pliku");
@@ -162,7 +169,7 @@ public class MainFrame {
 		
 				txtpnA = new JTextPane();
 				scrollPane_1.setViewportView(txtpnA);
-				txtpnA.setPreferredSize(new Dimension(500, 600));
+				txtpnA.setPreferredSize(new Dimension(500, 450));
 				txtpnA.setEditable(false);
 				doc = txtpnA.getStyledDocument();
 
@@ -211,7 +218,6 @@ public class MainFrame {
 			int openRet = jfcWords.showOpenDialog(frame);
 			if (openRet == JFileChooser.APPROVE_OPTION) {
 				File jfcWordsFile = jfcWords.getSelectedFile();
-				HashMapUtils hsu = new HashMapUtils();
 				try {
 					hsu.readHashMapFromFile(jfcWordsFile);
 				} catch (IOException e1) {
@@ -219,22 +225,74 @@ public class MainFrame {
 					e1.printStackTrace();
 				}
 				try {
-					doc.insertString(0, "Wczytane s≥owa: \n ", null);
+					doc.insertString(0, "Wczytane sÔøΩowa: \n ", null);
 					for (String el : hsu.getWordsArray()) {
 						doc.insertString(doc.getLength()-1, el + "\n", null);
 					}
 				}
 				catch(Exception e_doc) {
 					textField.setForeground(Color.red.darker());
-					textField.setText("Niepoprawnie wczytano s≥owa!");
+					textField.setText("Niepoprawnie wczytano s≈Çowa!");
 				}
 				textField.setForeground(Color.green.darker());
-				textField.setText("Poprawnie wczytano s≥owa!");
+				textField.setText("Poprawnie wczytano s≈Çowa!");
 				
 				//@TODO TU trzeba jeszcze porobic jakies pola boolowskie, ktore po wczytaniu zmienilyby na true, ze wczytano
 				// i wtedy mozna dopiero by odpalic jakakolwiek analize, bo tak to puscimy analize bez slow to chujnia bedzie
 			}
 		}
+	}
+	
+	private class SaveWordsToFileWithJFC implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser jfcSaveWords = new JFileChooser();
+			jfcSaveWords.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int saveRet = jfcSaveWords.showSaveDialog(frame);
+			if (saveRet == JFileChooser.APPROVE_OPTION) {
+				File toSave = jfcSaveWords.getSelectedFile();
+				try {
+					hsu.sortHashMapByValuesToFile(toSave);
+					textField.setForeground(Color.green.darker());
+					textField.setText(textField.getText() + "||" + "Poprawnie zapisano s≈Çowa!");
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					textField.setForeground(Color.red.darker());
+					textField.setText(textField.getText() + "||" + "Niepoprawnie zapisano s≈Çowa!");
+
+				}
+			}
+		}
+		//@TODO trzeba by odpowiednie pliki wczytaƒá i potestowaƒá.
+	}
+	
+	private class OpenWeightsFromFileWithJFC implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser jfcOpenWeights = new JFileChooser();
+			jfcOpenWeights.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//jfcOpenWeights.setFileFilter(filter); tu trzeba poczytac
+			int openRet = jfcOpenWeights.showOpenDialog(frame);
+			if (openRet == JFileChooser.APPROVE_OPTION) {
+				File toOpen = jfcOpenWeights.getSelectedFile();
+				try {
+					wu.loadWeightsFromFile(toOpen);
+					textField_1.setForeground(Color.green.darker());
+					textField_1.setText("Poprawnie wczytano wagi!");
+					doc.insertString(0, "Wczytane wagi: \n ", null);
+					for (Double element : wu.getWeightsList()) {
+						doc.insertString(doc.getLength(), element.toString() + " ", null);
+					}
+				} catch (Exception e3) {
+					e3.printStackTrace();
+					textField_1.setForeground(Color.red.darker());
+					textField_1.setText("Niepoprawnie wczytano wagi!");
+				}
+			}
+		}
 		
 	}
-}
+	
+} // main class

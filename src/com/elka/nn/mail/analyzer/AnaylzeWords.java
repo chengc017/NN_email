@@ -31,11 +31,11 @@ public class AnaylzeWords {
 				html_mess = new HTMLmessage(MR);
 				isHTML = html_mess.analyzeParts(html_mess.getMail().getMessage());
 				if (!isHTML) {
-					hsu.getCountedList(tmp_path);
+					hsu.getCountedList(fileEntry);
 				}
 			}
 		}
-		hsu.sortHashMapByValues(toSave);
+		hsu.sortHashMapByValuesToFile(toSave);
 	}
 	
 	

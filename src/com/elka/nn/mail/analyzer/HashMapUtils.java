@@ -11,13 +11,16 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class HashMapUtils {
+	
+	private final int SIZEOFWORDS = 50;
 
 	private HashMap<String, Integer> wordcount = new HashMap<String, Integer>();
 //	private File inFile;
 	private BufferedReader in;
 	private FileWriter fw;
-	private String[] wordsArray = new String[50];
+	private String[] wordsArray = new String[SIZEOFWORDS];
 
+	
 	public HashMapUtils() {
 //		this.inFile = new File(path);
 		this.in = null;
@@ -94,7 +97,7 @@ public class HashMapUtils {
 		}
 	}
 	
-	public void sortHashMapByValues(File inFile) {
+	public void sortHashMapByValuesToFile(File inFile) {
 	    // This code sorts outputs HashMap sorting it by values 
 	    // First we're getting values array  
 	    ArrayList<Integer> values = new ArrayList<Integer>();
@@ -113,12 +116,51 @@ public class HashMapUtils {
 	                continue;
 	            last_i = i;
 	            // we print all hash keys  
-	            for (String s : wordcount.keySet()) { 
+	            for (String s : wordcount.keySet()) {
 	                if (wordcount.get(s) == i) {
-	                	// which have this value  
+	                	// which have this value
 	                	fw.write(s + ":" + i + "\n");
 	                	System.out.println(s + ":" + i);
 	                }
+	            }
+	            // pretty inefficient, but works  
+	        } 
+	        fw.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+	}
+	
+	public void sortHashMapByValuesInNN() {
+	    // This code sorts outputs HashMap sorting it by values 
+	    // First we're getting values array  
+	    ArrayList<Integer> values = new ArrayList<Integer>();
+	    values.addAll(wordcount.values());
+	    // and sorting it (in reverse order) 
+	    Collections.sort(values, Collections.reverseOrder());
+	    
+	    try {
+//	    	File newFile = new File(outPath);
+//	    	BufferedWriter out = new BufferedWriter(new FileWriter(outPath));
+	    	int last_i = -1;
+	        // Now, for each value  
+	    	int arrayCounter = 0;
+	        for (Integer i : values) {
+	        	if (arrayCounter == SIZEOFWORDS)
+                	break;
+	            if (last_i == i) // without dublicates  
+	                continue;
+	            last_i = i;
+	            // we print all hash keys  
+	            for (String s : wordcount.keySet()) {
+	                if (wordcount.get(s) == i) {
+	                	// which have this value
+	                	//System.out.println(s + ":" + i);
+	                	wordsArray[arrayCounter] = s;
+	                }
+	                arrayCounter++;
+	                if (arrayCounter == SIZEOFWORDS)
+	                	break;
 	            }
 	            // pretty inefficient, but works  
 	        } 
@@ -144,6 +186,10 @@ public class HashMapUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void getWordsFromHashMapToArray() {
+		
 	}
 	
 	public String[] getWordsArray() {

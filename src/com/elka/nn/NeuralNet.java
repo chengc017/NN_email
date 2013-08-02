@@ -244,13 +244,37 @@ public class NeuralNet {
 		return tmp;
 	}
 	
+	public List<Double> getWeightsTable() {
+		List<Double> tmp = new ArrayList<Double>();
+		for (Layer l : layers) {
+			tmp.addAll(l.getWeightsInLayers());
+		}
+		return tmp;
+	}
+	
+	// @TODO: do przetestowania czy w ogole ma to sens
+	
+	public void setWeightsFromList(List<Double> list) {
+		Double[] tmpArray = new Double[list.size()];
+		list.toArray(tmpArray);
+		int layCount = 0;
+		int innerCount = 0;
+		for (int i = 0; i<layers[layCount].neurons.length; i++) {
+			for (int k = 0; k<layers[layCount].neurons[i].getWeightsSize(); k++) {
+				layers[layCount].neurons[i].setWeight(tmpArray[innerCount], k);
+				innerCount++;
+			}
+			if (i == (layers[layCount].neurons.length-1))
+				layCount++;
+		}
+	}
+	
 	/*-------------------------------------------------------------------------------*/
 	/*------------- USTALANIE WAG POCZATKOWYCH NA SZTYWNO DO TESTOW------------------*/
 	/* Ustalenie wag @newWeights w warstwie @indexL i neuronie @indexN---------------*/
 	public void setWeightsByParamInLayer(int indexL, int indexN, double[] newWeights) {
 		layers[indexL].neurons[indexN].setWeightsByParam(newWeights);
-	}
-	
+	}	
 
 	@Override
 	public String toString() {
