@@ -24,9 +24,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 
+import com.elka.nn.LearnWithVector;
+import com.elka.nn.NeuralNet;
 import com.elka.nn.WeightsUtils;
+import com.elka.nn.mail.analyzer.AnaylzeWords;
 import com.elka.nn.mail.analyzer.HashMapUtils;
 
 import java.awt.event.ActionListener;
@@ -39,16 +43,17 @@ public class MainFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	
+
 	private JTextPane txtpnA;
 
 	private FileTreeModel model;
 	private JTree tree;
-	
+
 	private StyledDocument doc;
-	
+
 	private HashMapUtils hsu = null;
 	private WeightsUtils wu = null;
+	private NeuralNet NN;
 
 	/**
 	 * Launch the application.
@@ -84,6 +89,7 @@ public class MainFrame {
 	public MainFrame() {
 		hsu = new HashMapUtils();
 		wu = new WeightsUtils();
+		NN = new NeuralNet(0.1, 2, 5, 6, 1);
 		initialize();
 	}
 
@@ -124,12 +130,12 @@ public class MainFrame {
 		panel.add(textField_2);
 		textField_2.setColumns(10);
 
-		JButton btnWczytajSowaZ = new JButton("Wczytaj s\u0142owa z pliku");
+		JButton btnWczytajSowaZ = new JButton("Wczytaj słowa z pliku");
 		btnWczytajSowaZ.setBounds(10, 52, 154, 23);
 		btnWczytajSowaZ.addActionListener(new LoadWordsWithJFC());
 		panel.add(btnWczytajSowaZ);
 
-		JButton btnZapiszSowaZ = new JButton("Zapisz s\u0142owa z analizy");
+		JButton btnZapiszSowaZ = new JButton("Zapisz słowa z analizy");
 		btnZapiszSowaZ.setBounds(174, 52, 155, 23);
 		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
@@ -144,43 +150,44 @@ public class MainFrame {
 		btnZapiszWagiDo.setBounds(662, 52, 164, 23);
 		panel.add(btnZapiszWagiDo);
 
-		String btnlbl = "<html>" + "Analizuj wiadomo\u015Bci" + "<br>"
+		String btnlbl = "<html>" + "Analizuj wiadomości" + "<br>"
 				+ "w wybranej lokalizacji" + "</html>";
 		JButton btnAnalizujWiadomociW = new JButton(btnlbl);
 		btnAnalizujWiadomociW.setBounds(836, 87, 164, 48);
 		panel.add(btnAnalizujWiadomociW);
 
 		JButton btnAnalizujZaznaczonWiadomo = new JButton("<html>"
-				+ "Analizuj zaznaczon\u0105" + "<br>" + "wiadomo\u015B\u0107"
-				+ "</html>");
+				+ "Analizuj zaznaczoną" + "<br>" + "wiadomość" + "</html>");
 		btnAnalizujZaznaczonWiadomo.setBounds(662, 87, 164, 48);
 		panel.add(btnAnalizujZaznaczonWiadomo);
 
-		JButton btnWybierzLokalizacj = new JButton("Wybierz lokalizacj\u0119");
+		JButton btnWybierzLokalizacj = new JButton("Wybierz lokalizację");
 		btnWybierzLokalizacj.addActionListener(new ChangeDirLocation());
 		btnWybierzLokalizacj.setBounds(10, 114, 188, 23);
-		
+
 		panel.add(btnWybierzLokalizacj);
-		
-		JButton btnWykonajAnalizSw = new JButton("Wykonaj analiz\u0119 s\u0142\u00F3w");
+
+		JButton btnWykonajAnalizSw = new JButton("Wykonaj analizę słów");
 		btnWykonajAnalizSw.setBounds(339, 52, 154, 23);
+		btnWykonajAnalizSw.addActionListener(new GetWordsFromCurrentLocation());
 		panel.add(btnWykonajAnalizSw);
-		
-		JButton btnNauczSiedobierz = new JButton("Naucz sie\u0107 (dobierz wagi)");
+
+		JButton btnNauczSiedobierz = new JButton("Naucz sieć (dobierz wagi)");
 		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
+		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
 
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane();
 		panel_1.add(scrollPane_1);
-		
-				txtpnA = new JTextPane();
-				scrollPane_1.setViewportView(txtpnA);
-				txtpnA.setPreferredSize(new Dimension(500, 450));
-				txtpnA.setEditable(false);
-				doc = txtpnA.getStyledDocument();
+
+		txtpnA = new JTextPane();
+		scrollPane_1.setViewportView(txtpnA);
+		txtpnA.setPreferredSize(new Dimension(500, 450));
+		txtpnA.setEditable(false);
+		doc = txtpnA.getStyledDocument();
 
 		/*--------------------------- JTREE -----------------------------*/
 		File root = new File(System.getProperty("user.home"));
@@ -201,9 +208,9 @@ public class MainFrame {
 		frame.pack();
 		frame.setVisible(true);
 	}
-	
-	private class ChangeDirLocation implements ActionListener{
-		
+
+	private class ChangeDirLocation implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser jfcMain = new JFileChooser();
@@ -217,8 +224,8 @@ public class MainFrame {
 			}
 		}
 	}
-	
-	private class LoadWordsWithJFC implements ActionListener{
+
+	private class LoadWordsWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -236,25 +243,28 @@ public class MainFrame {
 					textField.setText("Niepoprawnie wczytano słowa!");
 				}
 				try {
-					doc.insertString(doc.getLength(), "Wczytane słowa: \n ", null);
+					doc.insertString(doc.getLength(), "Wczytane słowa: \n ",
+							null);
 					for (String el : hsu.getWordsArray()) {
-						doc.insertString(doc.getLength()-1, el + "\n", null);
+						doc.insertString(doc.getLength() - 1, el + "\n", null);
 					}
-					doc.insertString(doc.getLength(), "\n ------------------- \n ", null);
-				}
-				catch(Exception e_doc) {
+					doc.insertString(doc.getLength(),
+							"\n ------------------- \n ", null);
+				} catch (Exception e_doc) {
 					e_doc.printStackTrace();
 				}
 				textField.setForeground(Color.green.darker());
 				textField.setText("Poprawnie wczytano słowa!");
-				
-				//@TODO TU trzeba jeszcze porobic jakies pola boolowskie, ktore po wczytaniu zmienilyby na true, ze wczytano
-				// i wtedy mozna dopiero by odpalic jakakolwiek analize, bo tak to puscimy analize bez slow to chujnia bedzie
+
+				// @TODO TU trzeba jeszcze porobic jakies pola boolowskie, ktore
+				// po wczytaniu zmienilyby na true, ze wczytano
+				// i wtedy mozna dopiero by odpalic jakakolwiek analize, bo tak
+				// to puscimy analize bez slow to chujnia bedzie
 			}
 		}
 	}
-	
-	private class SaveWordsToFileWithJFC implements ActionListener{
+
+	private class SaveWordsToFileWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -266,25 +276,27 @@ public class MainFrame {
 				try {
 					hsu.sortHashMapByValuesToFile(toSave);
 					textField.setForeground(Color.green.darker());
-					textField.setText(textField.getText() + "||" + "Poprawnie zapisano słowa!");
+					textField.setText(textField.getText() + " || "
+							+ "Poprawnie zapisano słowa!");
 				} catch (Exception e2) {
 					e2.printStackTrace();
 					textField.setForeground(Color.red.darker());
-					textField.setText(textField.getText() + "||" + "Niepoprawnie zapisano słowa!");
+					textField.setText(textField.getText() + " || "
+							+ "Niepoprawnie zapisano słowa!");
 
 				}
 			}
 		}
-		//@TODO trzeba by odpowiednie pliki wczytać i potestować.
+		// @TODO trzeba by odpowiednie pliki wczytać i potestować.
 	}
-	
-	private class OpenWeightsFromFileWithJFC implements ActionListener{
+
+	private class OpenWeightsFromFileWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser jfcOpenWeights = new JFileChooser();
 			jfcOpenWeights.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//jfcOpenWeights.setFileFilter(filter); tu trzeba poczytac
+			// jfcOpenWeights.setFileFilter(filter); tu trzeba poczytac
 			int openRet = jfcOpenWeights.showOpenDialog(frame);
 			if (openRet == JFileChooser.APPROVE_OPTION) {
 				File toOpen = jfcOpenWeights.getSelectedFile();
@@ -294,9 +306,11 @@ public class MainFrame {
 					textField_1.setText("Poprawnie wczytano wagi!");
 					doc.insertString(doc.getLength(), "Wczytane wagi:\n ", null);
 					for (Double element : wu.getWeightsList()) {
-						doc.insertString(doc.getLength(), element.toString() + ", ", null);
+						doc.insertString(doc.getLength(), element.toString()
+								+ ", ", null);
 					}
-					doc.insertString(doc.getLength(), "\n ------------------- \n ", null);
+					doc.insertString(doc.getLength(),
+							"\n ------------------- \n ", null);
 				} catch (Exception e3) {
 					e3.printStackTrace();
 					textField_1.setForeground(Color.red.darker());
@@ -304,10 +318,10 @@ public class MainFrame {
 				}
 			}
 		}
-		
+
 	}
-	
-	public class SaveWeightsToFileWithJFC implements ActionListener{
+
+	public class SaveWeightsToFileWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -317,16 +331,80 @@ public class MainFrame {
 			if (saveRet == JFileChooser.APPROVE_OPTION) {
 				File toSave = jfcSaveWeights.getSelectedFile();
 				try {
-				wu.writeWeightsToFile(toSave);
-				textField_1.setForeground(Color.green.darker());
-				textField_1.setText(textField_1.getText() + "||" + "Poprawnie zapisano wagi");
+					wu.writeWeightsToFile(toSave);
+					textField_1.setForeground(Color.green.darker());
+					textField_1.setText(textField_1.getText() + " || "
+							+ "Poprawnie zapisano wagi");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					textField_1.setForeground(Color.red.darker());
-					textField_1.setText(textField_1.getText() + "||" + "Niepoprawnie wczytano wagi!");
+					textField_1.setText(textField_1.getText() + " || "
+							+ "Niepoprawnie wczytano wagi!");
 				}
 			}
 		}
-		
+	}
+
+	public class GetWordsFromCurrentLocation implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			File currentRoot = model.getRoot();
+			AnaylzeWords aw = new AnaylzeWords(hsu);
+			try {
+				aw.readFiles(currentRoot);
+				hsu.sortHashMapByValuesInNN();
+				textField.setForeground(Color.green.darker());
+				textField.setText(textField.getText() + " || "
+						+ "Poprawnie wykonano analizę!");
+				doc.insertString(doc.getLength(), "Słowa \n", null);
+				/*
+				 * for (String strEl : hsu.getWordsArray()) {
+				 * doc.insertString(doc.getLength(), strEl + " ", null); }
+				 */
+				String[] strArr = hsu.getWordsArray();
+				for (int i = 0; i < strArr.length; i++) {
+					doc.insertString(doc.getLength(), strArr[i], null);
+					doc.insertString(doc.getLength(), ", ", null);
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				textField.setForeground(Color.red.darker());
+				textField.setText(textField.getText() + " || "
+						+ "Niepoprawnie wykonano analizę!");
+			}
+		}
+
+	}
+
+	public class SetWeightsByLearning implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				doc.insertString(doc.getLength(),
+						"Trwa ustalanie wag, proszę czekać...\n", null);
+				LearnWithVector lwv = new LearnWithVector(NN);
+				lwv.setWeights();
+				doc.insertString(doc.getLength(),
+						" Poprawnie zakończono ustalanie wag!\n", null);
+				wu.setWeightsList(NN.getWeightsTable());
+				textField_1.setForeground(Color.green.darker());
+				textField_1.setText("Poprawnie ustalono wagi!");
+			} catch (Exception e_set) {
+				e_set.printStackTrace();
+				textField_1.setForeground(Color.red.darker());
+				textField_1.setText("Niepoprawnie ustalano wagi!");
+				try {
+					doc.insertString(doc.getLength(),
+							"Niepoprawnie ustalono wagi, błąd!", null);
+				} catch (BadLocationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+
 	}
 } // main class

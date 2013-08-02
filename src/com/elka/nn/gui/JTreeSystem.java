@@ -44,7 +44,7 @@ class FileTreeModel implements TreeModel {
   }
   
   // The model knows how to return the root object of the tree
-  public Object getRoot() { return root; }
+  public File getRoot() { return root; }
 
   // Tell JTree whether an object in the tree is a leaf or not
   public boolean isLeaf(Object node) {  return ((File)node).isFile(); }

@@ -27,6 +27,7 @@ public class NeuralNet {
 	public static final double DX = 15.0f/(TO-1);
 
 	protected Layer[] layers;
+	private List<Double> weightsList;
 
 	/**
 	 * 
@@ -50,6 +51,7 @@ public class NeuralNet {
 		this.error = 0;
 		this.prevError = 0;
 		this.learnRate = learnRate;
+		weightsList = new ArrayList<Double>();
 		layers = new Layer[numOfLayers];
 		layers[0] = new Layer(numNeurons1, numNeuron1Size); // warstwa ukryta
 		layers[1] = new Layer(numNeurons2, numNeurons1 + 1); // warstwa wyjsciowa (tyle ile w ukrytej + 1 (polaryzacja)
@@ -245,11 +247,11 @@ public class NeuralNet {
 	}
 	
 	public List<Double> getWeightsTable() {
-		List<Double> tmp = new ArrayList<Double>();
+//		List<Double> tmp = new ArrayList<Double>();
 		for (Layer l : layers) {
-			tmp.addAll(l.getWeightsInLayers());
+			weightsList.addAll(l.getWeightsInLayers());
 		}
-		return tmp;
+		return weightsList;
 	}
 	
 	// @TODO: do przetestowania czy w ogole ma to sens
@@ -267,6 +269,10 @@ public class NeuralNet {
 			if (i == (layers[layCount].neurons.length-1))
 				layCount++;
 		}
+	}
+	
+	public void setWeightsToList() {
+		
 	}
 	
 	/*-------------------------------------------------------------------------------*/

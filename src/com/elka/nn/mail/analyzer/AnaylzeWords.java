@@ -10,9 +10,9 @@ public class AnaylzeWords {
 	private HashMapUtils hsu;
 	private File toSave;
 	
-	public AnaylzeWords(String fileToSavePath) {
-		toSave = new File(fileToSavePath);
-		hsu = new HashMapUtils();
+	public AnaylzeWords(HashMapUtils hsu) {
+		//toSave = new File(fileToSavePath);
+		this.hsu = hsu;
 	}
 	
 	
@@ -35,7 +35,8 @@ public class AnaylzeWords {
 				}
 			}
 		}
-		hsu.sortHashMapByValuesToFile(toSave);
+		//hsu.sortHashMapByValuesToFile(toSave);
+		//System.out.println("Tu jestem po SORT_HASH");
 	}
 	
 	
@@ -45,17 +46,17 @@ public class AnaylzeWords {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fileToSavePath = "C:\\Users\\Lukasz\\Desktop\\out2.txt";
-		String dirOfFiles = "C:\\Users\\Lukasz\\Desktop\\cos_tam";
+/*		String fileToSavePath = "C:\\Users\\Lukasz\\Desktop\\out2.txt";
+		String dirOfFiles = "/home/lukasz/Pulpit/cos_tam";
 		File dir = new File(dirOfFiles);
-		AnaylzeWords AW = new AnaylzeWords(fileToSavePath);
+		AnaylzeWords AW = new AnaylzeWords();
 		try {
 			AW.readFiles(dir);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(1);
-		}
+		}*/
+		
 	}
-
 }

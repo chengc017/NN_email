@@ -12,17 +12,19 @@ import java.util.HashMap;
 
 public class HashMapUtils {
 	
-	private final int SIZEOFWORDS = 50;
+	public final int SIZEOFWORDS = 50;
 
-	private HashMap<String, Integer> wordcount = new HashMap<String, Integer>();
+	private HashMap<String, Integer> wordcount;
 //	private File inFile;
 	private BufferedReader in;
 	private FileWriter fw;
-	private String[] wordsArray = new String[SIZEOFWORDS];
+	private String[] wordsArray;
 
 	
 	public HashMapUtils() {
 //		this.inFile = new File(path);
+		wordcount = new HashMap<String, Integer>();
+		wordsArray = new String[SIZEOFWORDS];
 		this.in = null;
 		this.fw = null;
 	}
@@ -157,15 +159,14 @@ public class HashMapUtils {
 	                	// which have this value
 	                	//System.out.println(s + ":" + i);
 	                	wordsArray[arrayCounter] = s;
+	                	arrayCounter++;
 	                }
-	                arrayCounter++;
 	                if (arrayCounter == SIZEOFWORDS)
 	                	break;
 	            }
 	            // pretty inefficient, but works  
 	        } 
-	        fw.close();
-	    } catch (IOException e) {
+	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 	}
