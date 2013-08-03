@@ -43,6 +43,8 @@ public class MainFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
 
 	private JTextPane txtpnA;
 
@@ -110,7 +112,7 @@ public class MainFrame {
 		panel.setLayout(null);
 
 		textField = new JTextField();
-		textField.setBounds(10, 11, 483, 30);
+		textField.setBounds(10, 11, 240, 30);
 		textField.setForeground(Color.red.darker());
 		textField.setText("Nie wczytano słów!");
 		textField.setEditable(false);
@@ -119,16 +121,28 @@ public class MainFrame {
 
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(509, 11, 491, 30);
+		textField_1.setBounds(509, 11, 237, 30);
 		textField_1.setForeground(Color.red.darker());
 		textField_1.setText("Nie wczytano wag!");
 		textField_1.setEditable(false);
 		panel.add(textField_1);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(208, 115, 444, 20);
+		textField_2.setBounds(208, 111, 444, 24);
 		panel.add(textField_2);
 		textField_2.setColumns(10);
+		
+		textField_3 = new JTextField();
+		textField_3.setEditable(false);
+		textField_3.setColumns(10);
+		textField_3.setBounds(259, 11, 240, 30);
+		panel.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setEditable(false);
+		textField_4.setColumns(10);
+		textField_4.setBounds(756, 11, 246, 30);
+		panel.add(textField_4);
 
 		JButton btnWczytajSowaZ = new JButton("Wczytaj słowa z pliku");
 		btnWczytajSowaZ.setBounds(10, 52, 154, 23);
@@ -163,7 +177,7 @@ public class MainFrame {
 
 		JButton btnWybierzLokalizacj = new JButton("Wybierz lokalizację");
 		btnWybierzLokalizacj.addActionListener(new ChangeDirLocation());
-		btnWybierzLokalizacj.setBounds(10, 114, 188, 23);
+		btnWybierzLokalizacj.setBounds(10, 111, 188, 24);
 
 		panel.add(btnWybierzLokalizacj);
 
@@ -176,6 +190,7 @@ public class MainFrame {
 		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
 		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
+	
 
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
@@ -275,14 +290,12 @@ public class MainFrame {
 				File toSave = jfcSaveWords.getSelectedFile();
 				try {
 					hsu.sortHashMapByValuesToFile(toSave);
-					textField.setForeground(Color.green.darker());
-					textField.setText(textField.getText() + " || "
-							+ "Poprawnie zapisano słowa!");
+					textField_3.setForeground(Color.green.darker());
+					textField_3.setText("Poprawnie zapisano słowa!");
 				} catch (Exception e2) {
 					e2.printStackTrace();
-					textField.setForeground(Color.red.darker());
-					textField.setText(textField.getText() + " || "
-							+ "Niepoprawnie zapisano słowa!");
+					textField_3.setForeground(Color.red.darker());
+					textField_3.setText("Niepoprawnie zapisano słowa!");
 
 				}
 			}
@@ -332,14 +345,12 @@ public class MainFrame {
 				File toSave = jfcSaveWeights.getSelectedFile();
 				try {
 					wu.writeWeightsToFile(toSave);
-					textField_1.setForeground(Color.green.darker());
-					textField_1.setText(textField_1.getText() + " || "
-							+ "Poprawnie zapisano wagi");
+					textField_4.setForeground(Color.green.darker());
+					textField_4.setText("Poprawnie zapisano wagi");
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					textField_1.setForeground(Color.red.darker());
-					textField_1.setText(textField_1.getText() + " || "
-							+ "Niepoprawnie wczytano wagi!");
+					textField_4.setForeground(Color.red.darker());
+					textField_4.setText("Niepoprawnie wczytano wagi!");
 				}
 			}
 		}
