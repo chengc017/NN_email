@@ -107,6 +107,7 @@ public class LearnWithVector {
 
 		catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
 			System.out.println("Error");
 		}
 		System.out.println("Blad :" + err / 2);

@@ -6,24 +6,27 @@ import java.io.IOException;
 
 import javax.mail.MessagingException;
 
+import com.elka.nn.FlowVariables;
+
 public class AnalyzeMail {
 
 	private double[] binVector;
 	private MailReader MR;
 	private HashMapUtils hsu;
+	private FlowVariables fv;
 	
-	public AnalyzeMail(String mailPath) throws FileNotFoundException, MessagingException {
-		MR = new MailReader(mailPath);
-		hsu = new HashMapUtils();
-		binVector = new double[50];
+	public AnalyzeMail(HashMapUtils hsu, FlowVariables fv) throws FileNotFoundException, MessagingException {
+		this.hsu = hsu;
+		this.fv = fv;
 	}
 	
-	public void getDoubleVector(File wordsFile) throws MessagingException {
+	public void makeDoubleVector(String mailPath) throws MessagingException {
 		try {
+			binVector = new double[fv.WORDSIZE];
+			MR = new MailReader(mailPath);
 			String tmpMail = MR.getText(MR.getMessage());
 			String[] tmpArray = tmpMail.split("\\s+");	// narazie niech to beda whitespace'y
 			
-			hsu.readHashMapFromFile(wordsFile);			// wczytanie listy slow z pliku
 			String[] words = hsu.getWordsArray();		
 			
 			// tu moze trzeba by jeszcze z rozmiarem tych tablic pokombinowac zeby sie nie psuly
@@ -37,7 +40,6 @@ public class AnalyzeMail {
 					else {
 						binVector[i] = 0.0;
 					}
-						
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -48,16 +50,6 @@ public class AnalyzeMail {
 	public double[] getbinVector() {
 		return binVector;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * @param args

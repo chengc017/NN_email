@@ -43,7 +43,7 @@ public class Neuron {
 	}
 
 	public void setX(double[] input) {
-		x[0] = 1.0f; // polaryzacja
+		x[0] = 1.0; // polaryzacja
 		for (int i = 0; i < input.length; i++) {
 			x[i + 1] = input[i];
 		}

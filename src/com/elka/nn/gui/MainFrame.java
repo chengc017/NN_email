@@ -5,13 +5,16 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.jws.soap.SOAPBinding.Style;
+import javax.mail.MessagingException;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
@@ -27,15 +30,18 @@ import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 
+import com.elka.nn.FlowVariables;
 import com.elka.nn.LearnWithVector;
 import com.elka.nn.NeuralNet;
 import com.elka.nn.WeightsUtils;
+import com.elka.nn.mail.analyzer.AnalyzeMail;
 import com.elka.nn.mail.analyzer.AnaylzeWords;
 import com.elka.nn.mail.analyzer.HashMapUtils;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Window.Type;
+import javax.swing.JLabel;
 
 public class MainFrame {
 
@@ -56,6 +62,8 @@ public class MainFrame {
 	private HashMapUtils hsu = null;
 	private WeightsUtils wu = null;
 	private NeuralNet NN;
+	private FlowVariables fv;
+	private AnalyzeMail am = null;
 
 	/**
 	 * Launch the application.
@@ -89,9 +97,23 @@ public class MainFrame {
 	 * Create the application.
 	 */
 	public MainFrame() {
-		hsu = new HashMapUtils();
 		wu = new WeightsUtils();
-		NN = new NeuralNet(0.1, 2, 5, 6, 1);
+		fv = new FlowVariables();
+		hsu = new HashMapUtils(fv);
+		NN = new NeuralNet(fv.LEARN_RATE,
+							fv.LAYERS, 
+							fv.NEURONS_HID, 
+							fv.NUM_INPUT,
+							fv.NEURONS_OUT);
+		try {
+			am = new AnalyzeMail(hsu, fv);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initialize();
 	}
 
@@ -173,6 +195,7 @@ public class MainFrame {
 		JButton btnAnalizujZaznaczonWiadomo = new JButton("<html>"
 				+ "Analizuj zaznaczoną" + "<br>" + "wiadomość" + "</html>");
 		btnAnalizujZaznaczonWiadomo.setBounds(662, 87, 164, 48);
+		btnAnalizujZaznaczonWiadomo.addActionListener(new AnalyzeChosenMail());
 		panel.add(btnAnalizujZaznaczonWiadomo);
 
 		JButton btnWybierzLokalizacj = new JButton("Wybierz lokalizację");
@@ -190,6 +213,14 @@ public class MainFrame {
 		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
 		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
+		
+		JLabel lblSowaWagi = new JLabel("Słowa lub wagi - tylko pliki .txt");
+		lblSowaWagi.setBounds(10, 86, 164, 24);
+		panel.add(lblSowaWagi);
+		
+		JLabel lblWiadomociPliki = new JLabel("Wiadomości - tylko pliki .eml");
+		lblWiadomociPliki.setBounds(174, 86, 164, 24);
+		panel.add(lblWiadomociPliki);
 	
 
 		JPanel panel_1 = new JPanel();
@@ -209,11 +240,10 @@ public class MainFrame {
 
 		// Create a TreeModel object to represent our tree of files
 		model = new FileTreeModel(root);
-
+		
 		// Create a JTree and tell it to display our model
 		tree = new JTree();
 		tree.setModel(model);
-
 		// The JTree can get big, so allow it to scroll.
 		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(500, 100));
@@ -245,12 +275,13 @@ public class MainFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser jfcWords = new JFileChooser();
+			jfcWords.setFileFilter(new FilterTxt());
 			jfcWords.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			int openRet = jfcWords.showOpenDialog(frame);
 			if (openRet == JFileChooser.APPROVE_OPTION) {
 				File jfcWordsFile = jfcWords.getSelectedFile();
 				try {
-					hsu.readHashMapFromFile(jfcWordsFile);
+					hsu.readHashMapFromFile(jfcWordsFile, frame);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -267,9 +298,11 @@ public class MainFrame {
 							"\n ------------------- \n ", null);
 				} catch (Exception e_doc) {
 					e_doc.printStackTrace();
+					JOptionPane.showMessageDialog(frame, "Wystąpił błąd - niepoprawne wczytanie słów", "Błąd wczytywania słów", JOptionPane.ERROR_MESSAGE);
 				}
 				textField.setForeground(Color.green.darker());
 				textField.setText("Poprawnie wczytano słowa!");
+				
 
 				// @TODO TU trzeba jeszcze porobic jakies pola boolowskie, ktore
 				// po wczytaniu zmienilyby na true, ze wczytano
@@ -309,7 +342,7 @@ public class MainFrame {
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser jfcOpenWeights = new JFileChooser();
 			jfcOpenWeights.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			// jfcOpenWeights.setFileFilter(filter); tu trzeba poczytac
+			jfcOpenWeights.setFileFilter(new FilterTxt());
 			int openRet = jfcOpenWeights.showOpenDialog(frame);
 			if (openRet == JFileChooser.APPROVE_OPTION) {
 				File toOpen = jfcOpenWeights.getSelectedFile();
@@ -363,11 +396,10 @@ public class MainFrame {
 			File currentRoot = model.getRoot();
 			AnaylzeWords aw = new AnaylzeWords(hsu);
 			try {
-				aw.readFiles(currentRoot);
+				aw.readFiles(currentRoot, doc);
 				hsu.sortHashMapByValuesInNN();
 				textField.setForeground(Color.green.darker());
-				textField.setText(textField.getText() + " || "
-						+ "Poprawnie wykonano analizę!");
+				textField.setText("Poprawnie wykonano analizę!");
 				doc.insertString(doc.getLength(), "Słowa \n", null);
 				/*
 				 * for (String strEl : hsu.getWordsArray()) {
@@ -382,8 +414,8 @@ public class MainFrame {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				textField.setForeground(Color.red.darker());
-				textField.setText(textField.getText() + " || "
-						+ "Niepoprawnie wykonano analizę!");
+				textField.setText("Niepoprawnie wykonano analizę!");
+				JOptionPane.showMessageDialog(frame, "Wystąpił błąd - zmień lokalizację na taką, która zawiera pliki typu .eml", "Błąd wykonania analizy", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -395,7 +427,7 @@ public class MainFrame {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				doc.insertString(doc.getLength(),
-						"Trwa ustalanie wag, proszę czekać...\n", null);
+						"\nTrwa ustalanie wag, proszę czekać...\n", null);
 				LearnWithVector lwv = new LearnWithVector(NN);
 				lwv.setWeights();
 				doc.insertString(doc.getLength(),
@@ -417,5 +449,26 @@ public class MainFrame {
 			}
 		}
 
+	}
+	
+	public class AnalyzeChosenMail implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String pathname = tree.getLastSelectedPathComponent().toString();
+			try {
+				if (!pathname.endsWith(".eml")) {
+					throw new Exception();
+				}
+				am.makeDoubleVector(pathname);
+				double wynik = NN.goForward(am.getbinVector());
+				doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(frame, "Nie wybrano pliku .eml!", "Błąd", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
 	}
 } // main class

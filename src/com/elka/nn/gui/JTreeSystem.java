@@ -2,8 +2,11 @@ package com.elka.nn.gui;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.*;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 
 public class JTreeSystem {
   public static void main(String[] args) {
@@ -37,6 +40,7 @@ public class JTreeSystem {
 class FileTreeModel implements TreeModel {
   // We specify the root directory when we create the model.
   protected File root;
+  
   public FileTreeModel(File root) { this.root = root; }
 
   public void setRoot(File root) {
@@ -51,7 +55,14 @@ class FileTreeModel implements TreeModel {
 
   // Tell JTree how many children a node has
   public int getChildCount(Object parent) {
-    String[] children = ((File)parent).list();
+    File[] children = ((File)parent).listFiles(new FileFilter() {
+		
+		@Override
+		public boolean accept(File pathname) {
+			String name = pathname.getName().toLowerCase();
+			return name.endsWith(".eml") || pathname.isDirectory();
+		}
+	});
     if (children == null) return 0;
     return children.length;
   }
@@ -60,18 +71,32 @@ class FileTreeModel implements TreeModel {
   // Our model returns File objects for all nodes in the tree.  The
   // JTree displays these by calling the File.toString() method.
   public Object getChild(Object parent, int index) {
-    String[] children = ((File)parent).list();
-    if ((children == null) || (index >= children.length)) return null;
-    return new File((File) parent, children[index]);
+    File[] children = ((File)parent).listFiles(new FileFilter() {
+		
+		@Override
+		public boolean accept(File pathname) {
+			String name = pathname.getName().toLowerCase();
+			return name.endsWith(".eml") || pathname.isDirectory();
+		}
+	});
+    if ((children == null) || (index >= children.length)) return root;
+    return new File((File) parent, children[index].getName());
   }
 
   // Figure out a child's position in its parent node.
   public int getIndexOfChild(Object parent, Object child) {
-    String[] children = ((File)parent).list();
+    File[] children = ((File)parent).listFiles(new FileFilter() {
+		
+		@Override
+		public boolean accept(File pathname) {
+			String name = pathname.getName().toLowerCase();
+			return name.endsWith(".eml") || pathname.isDirectory();
+		}
+	});
     if (children == null) return -1;
     String childname = ((File)child).getName();
     for(int i = 0; i < children.length; i++) {
-      if (childname.equals(children[i])) return i;
+      if (childname.equals(children[i].getName())) return i;
     }
     return -1;
   }

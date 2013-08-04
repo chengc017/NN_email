@@ -1,5 +1,6 @@
 package com.elka.nn.mail.analyzer;
 
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,38 +11,45 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
+import com.elka.nn.FlowVariables;
+
 public class HashMapUtils {
 	
-	public final int SIZEOFWORDS = 50;
+	public final int SIZEOFWORDS;
 
 	private HashMap<String, Integer> wordcount;
 //	private File inFile;
 	private BufferedReader in;
 	private FileWriter fw;
 	private String[] wordsArray;
+	private FlowVariables fv;
 
 	
-	public HashMapUtils() {
+	public HashMapUtils(FlowVariables fv) {
 //		this.inFile = new File(path);
+		this.fv = fv;
+		SIZEOFWORDS = fv.WORDSIZE;
 		wordcount = new HashMap<String, Integer>();
-		wordsArray = new String[SIZEOFWORDS];
+		wordsArray = new String[fv.WORDSIZE];
 		this.in = null;
 		this.fw = null;
 	}
 
-	public void getCountedList(File filePath) throws IOException {
+	public void getCountedList(String textToCount) throws IOException {
 
 		try {
 
 			// Opening file
 			// change "/Users/anyexample/input.txt" to path to your test file
-			in = new BufferedReader(new FileReader(filePath));
+//			in = new BufferedReader(new FileReader(filePath));
 			// string buffer for file reading
-			String str;
+			String[] strA = textToCount.split(" ");
 
 			// reading line by line from file
-			while ((str = in.readLine()) != null) {
-				str = str.toLowerCase(); // convert to lower case
+			for (String strElement : strA) {
+				String str = strElement.toLowerCase(); // convert to lower case
 
 				// starting index, we'll use this to copy words from string
 				int idx1 = -1;
@@ -90,7 +98,7 @@ public class HashMapUtils {
 				}
 			}
 			// Close buffered reader
-			in.close();
+//			in.close();
 		} catch (Exception e) {
 			// If something unexpected happened
 			// print exception information and quit
@@ -110,7 +118,7 @@ public class HashMapUtils {
 	    try {
 //	    	File newFile = new File(outPath);
 //	    	BufferedWriter out = new BufferedWriter(new FileWriter(outPath));
-	        fw = new FileWriter(inFile);
+	    	fw = new FileWriter(inFile);
 	    	int last_i = -1;
 	        // Now, for each value  
 	        for (Integer i : values) { 
@@ -171,13 +179,15 @@ public class HashMapUtils {
 	    }
 	}
 	
-	public void readHashMapFromFile(File inputFile) throws IOException {
+	public void readHashMapFromFile(File inputFile, Component parent) throws IOException {
 		String[] tmpArray = new String[2];
 		int i = 0;
 		try {
 			in = new BufferedReader(new FileReader(inputFile));
 			String str;
 			while ((str = in.readLine()) != null) {
+				if (i == SIZEOFWORDS)
+					break;
 				str = str.toLowerCase();
 				tmpArray = str.split(":");			// do tymczasowej tablicy wyrzucam przeczytany wiersz
 				wordsArray[i] = tmpArray[0];		// i biore pierwszy element (klucz)
@@ -186,6 +196,7 @@ public class HashMapUtils {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(parent, "Wystąpił błąd - niepoprawne wczytanie słów", "Błąd wczytywania słów", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -203,17 +214,17 @@ public class HashMapUtils {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		String dirPath = "C:\\Users\\Lukasz\\Desktop\\test_hash.txt";
+/*		String dirPath = "C:\\Users\\Lukasz\\Desktop\\test_hash.txt";
 		String outPath = "C:\\Users\\Lukasz\\Desktop\\out2.txt";
-		HashMapUtils HMU = new HashMapUtils();
+//		HashMapUtils HMU = new HashMapUtils();
 //		HMU.getCountedList(dirPath);
 		File inFile = new File(outPath); 
 //		HMU.sortHashMapByValues();
-		HMU.readHashMapFromFile(inFile);
-		String[] tmp = HMU.getWordsArray();
+//		HMU.readHashMapFromFile(inFile);
+//		String[] tmp = HMU.getWordsArray();
 		for (String el : tmp) {
-			System.out.println(el);
-		}
+			System.out.println(el);*/
+//		}
 	}
 
 }
