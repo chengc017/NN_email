@@ -213,14 +213,6 @@ public class MainFrame {
 		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
 		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
-		
-		JLabel lblSowaWagi = new JLabel("Słowa lub wagi - tylko pliki .txt");
-		lblSowaWagi.setBounds(10, 86, 164, 24);
-		panel.add(lblSowaWagi);
-		
-		JLabel lblWiadomociPliki = new JLabel("Wiadomości - tylko pliki .eml");
-		lblWiadomociPliki.setBounds(174, 86, 164, 24);
-		panel.add(lblWiadomociPliki);
 	
 
 		JPanel panel_1 = new JPanel();
@@ -282,6 +274,7 @@ public class MainFrame {
 				File jfcWordsFile = jfcWords.getSelectedFile();
 				try {
 					hsu.readHashMapFromFile(jfcWordsFile, frame);
+					fv.setWordsOn(true);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -348,6 +341,7 @@ public class MainFrame {
 				File toOpen = jfcOpenWeights.getSelectedFile();
 				try {
 					wu.loadWeightsFromFile(toOpen);
+					fv.setWeightsOn(true);
 					textField_1.setForeground(Color.green.darker());
 					textField_1.setText("Poprawnie wczytano wagi!");
 					doc.insertString(doc.getLength(), "Wczytane wagi:\n ", null);
@@ -398,6 +392,7 @@ public class MainFrame {
 			try {
 				aw.readFiles(currentRoot, doc);
 				hsu.sortHashMapByValuesInNN();
+				fv.setWordsOn(true);
 				textField.setForeground(Color.green.darker());
 				textField.setText("Poprawnie wykonano analizę!");
 				doc.insertString(doc.getLength(), "Słowa \n", null);
@@ -430,6 +425,7 @@ public class MainFrame {
 						"\nTrwa ustalanie wag, proszę czekać...\n", null);
 				LearnWithVector lwv = new LearnWithVector(NN);
 				lwv.setWeights();
+				fv.setWeightsOn(true);
 				doc.insertString(doc.getLength(),
 						" Poprawnie zakończono ustalanie wag!\n", null);
 				wu.setWeightsList(NN.getWeightsTable());
@@ -454,15 +450,25 @@ public class MainFrame {
 	public class AnalyzeChosenMail implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			String pathname = tree.getLastSelectedPathComponent().toString();
+		public void actionPerformed(ActionEvent e) throws NullPointerException {
+			String pathname = null;
+			try {
+				pathname = tree.getLastSelectedPathComponent().toString();
+			} catch (NullPointerException nullex) {
+				
+			}
 			try {
 				if (!pathname.endsWith(".eml")) {
 					throw new Exception();
 				}
-				am.makeDoubleVector(pathname);
-				double wynik = NN.goForward(am.getbinVector());
-				doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+				if (fv.getWordsOn() && fv.getWeightsOn()) {
+					am.makeDoubleVector(pathname);
+					double wynik = NN.goForward(am.getbinVector());
+					doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+				}
+				else {
+					JOptionPane.showMessageDialog(frame, "Wagi lub słowa nie są poprawnie ustalone w sieci", "Błąd", JOptionPane.ERROR_MESSAGE);
+				}
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
