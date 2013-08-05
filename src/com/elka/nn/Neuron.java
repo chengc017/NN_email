@@ -37,8 +37,8 @@ public class Neuron {
 		for (int i = 0; i < weights.length; i++) {
 			double tmp = generator.nextDouble();
 			//weights[i] = tmp*5;
-//			weights[i] = 0.2*(-0.5+tmp);//*5f;
-			weights[i] = tmp;
+			weights[i] = 0.2*(-0.5+tmp)*5;
+//			weights[i] = tmp;
 		}
 	}
 

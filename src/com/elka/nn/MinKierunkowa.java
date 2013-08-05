@@ -174,8 +174,8 @@ public class MinKierunkowa {
 	public double getParamOfMinKierunkowa(Vector<double[]> dVec, double[] data) {
 		Network.makeOriginalWeightsCopy(); // zeby mi oryginalne wagi nie
 											// zniknely
-		firstParam = 0.0f;
-		secParam = 1E-9f;// 0.001;
+		firstParam = 0.0;
+		secParam = 1E-5;// 0.001;
 		double ff1 = goForwardMinKierunkowa(dVec, data, this.firstParam);
 		double ff2 = goForwardMinKierunkowa(dVec, data, this.secParam);
 		while (ff1 > ff2) {
@@ -188,12 +188,9 @@ public class MinKierunkowa {
 		double al1 = secParam - 0.613f * (secParam - firstParam);
 		double al2 = 0.613f * (secParam - firstParam) + firstParam;
 		Network.getOriginalWeights();
-		for (int i = 0; i < 45; i++) {
+		for (int i = 0; i < 15; i++) {
 			ff1 = goForwardMinKierunkowa(dVec, data, al2);
 			ff2 = goForwardMinKierunkowa(dVec, data, al1);
-			
-			if (Math.abs(ff1 - ff2) < EPS)
-				break;
 			
 			if (ff1 > ff2) {
 				secParam = al2;

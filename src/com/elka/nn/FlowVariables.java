@@ -7,10 +7,10 @@ public class FlowVariables {
 	
 	public final int WORDSIZE = 5;
 	public final int LAYERS = 2;
-	public final int NEURONS_HID = 3;
+	public final int NEURONS_HID = 6;
 	public final int NEURONS_OUT = 1;
 	public final int NUM_INPUT = WORDSIZE + 1;
-	public final double LEARN_RATE = 0.15;
+	public final double LEARN_RATE = 0.0001;
 	
 	public FlowVariables() {
 		this.isWordsOn = false;

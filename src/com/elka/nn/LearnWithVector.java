@@ -15,6 +15,7 @@ public class LearnWithVector {
 	
 	private NeuralNet NN;
 	private GradSprzez GS;
+	private MinKierunkowa MK;
 	
 //	private static PrintStream out;
 
@@ -22,12 +23,13 @@ public class LearnWithVector {
 		dVec = new Vector<double[]>();
 		this.dataSeriesVector();
 
-		predictedOut = new double[5];
+		predictedOut = new double[6];
 		this.dataSeriesOutArray();
 
 		//this.NN = new NeuralNet(0.1, NUM_LAYERS, 3, 6, 1);
 		this.NN = NN;
 		GS = new GradSprzez();
+		MK = new MinKierunkowa(NN);
 	}
 		/*------------ WAGI NA SZTYWNO DLA NEURONOW WEJSCIOWYCH -----------------*/
 		/*double[] newWeightsW1 = new double[6];
@@ -92,8 +94,8 @@ public class LearnWithVector {
 				System.out.println("Iteracja zew: " + k
 						+ " BLAD SREDNIOKWADR.: " + err);
 				GS.makeGradSprzez(NN);
-				//NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
-				NN.updateWeightsInLayers();
+				NN.setLearnRate(MK.getParamOfMinKierunkowa(dVec, predictedOut));
+				//NN.updateWeightsInLayers();
 				NN.updateWeightsInLayersDIRECT();
 				System.out
 						.println("---------------------------------------------------------------------------------------");
@@ -110,7 +112,7 @@ public class LearnWithVector {
 			e.printStackTrace();
 			System.out.println("Error");
 		}
-		System.out.println("Blad :" + err / 2);
+		System.out.println("Blad :" + err);
 
 	}
 
@@ -120,6 +122,7 @@ public class LearnWithVector {
 		double[] x3 = new double[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
 		double[] x4 = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
 		double[] x5 = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
+		double[] x6 = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 		//dVec = new Vector<double[]>();
 
@@ -128,6 +131,7 @@ public class LearnWithVector {
 		dVec.add(x3);
 		dVec.add(x4);
 		dVec.add(x5);
+		dVec.add(x6);
 	}
 
 	public void dataSeriesOutArray() {
@@ -136,11 +140,13 @@ public class LearnWithVector {
 		double d3 = 1.0f;
 		double d4 = 1.0f;
 		double d5 = 0.0f;
+		double d6 = 0.0;
 		predictedOut[0] = d1;
 		predictedOut[1] = d2;
 		predictedOut[2] = d3;
 		predictedOut[3] = d4;
 		predictedOut[4] = d5;
+		predictedOut[5] = d6;
 	}
 	
 	/**
