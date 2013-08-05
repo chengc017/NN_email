@@ -35,6 +35,7 @@ import com.elka.nn.LearnWithVector;
 import com.elka.nn.NeuralNet;
 import com.elka.nn.WeightsUtils;
 import com.elka.nn.mail.analyzer.AnalyzeMail;
+import com.elka.nn.mail.analyzer.AnalyzeMailsFromDir;
 import com.elka.nn.mail.analyzer.AnaylzeWords;
 import com.elka.nn.mail.analyzer.HashMapUtils;
 
@@ -64,6 +65,7 @@ public class MainFrame {
 	private NeuralNet NN;
 	private FlowVariables fv;
 	private AnalyzeMail am = null;
+	private AnalyzeMailsFromDir amfd = null;
 
 	/**
 	 * Launch the application.
@@ -190,6 +192,7 @@ public class MainFrame {
 				+ "w wybranej lokalizacji" + "</html>";
 		JButton btnAnalizujWiadomociW = new JButton(btnlbl);
 		btnAnalizujWiadomociW.setBounds(836, 87, 164, 48);
+		btnAnalizujWiadomociW.addActionListener(new AnalyzeAllMails());
 		panel.add(btnAnalizujWiadomociW);
 
 		JButton btnAnalizujZaznaczonWiadomo = new JButton("<html>"
@@ -473,6 +476,28 @@ public class MainFrame {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(frame, "Nie wybrano pliku .eml!", "Błąd", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+	}
+	
+	public class AnalyzeAllMails implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			amfd = new AnalyzeMailsFromDir(hsu, fv, NN);
+			File currentRoot = model.getRoot();
+			if (fv.getWordsOn() && fv.getWeightsOn()) {
+				amfd.getScoreFromCurrentDir(currentRoot, doc);
+				try {
+					amfd.infoDoc(doc);
+				} catch (BadLocationException e1) {
+					e1.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(frame, "Przeanalizowano " + amfd.getCount() + " wiadomości.", "Zakończono analizę", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else {
+				JOptionPane.showMessageDialog(frame, "Wagi lub słowa nie są poprawnie ustalone w sieci", "Błąd", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		

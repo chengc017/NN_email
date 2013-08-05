@@ -116,8 +116,10 @@ public class LearnWithVector {
 
 	}
 
+	//@TODO tu trzeba pozmieniać te wartości oczekiwane
+	
 	public void dataSeriesVector() {
-		double[] x1 = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };
+		double[] x1 = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };		
 		double[] x2 = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
 		double[] x3 = new double[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
 		double[] x4 = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
