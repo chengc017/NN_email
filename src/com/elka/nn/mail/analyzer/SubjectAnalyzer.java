@@ -19,17 +19,17 @@ public class SubjectAnalyzer {
 		this.listOfSubWords = new ArrayList<String>();
 	}
 	
-	public int analyzeSubject() throws MessagingException {
+	public double analyzeSubject() throws MessagingException {
 		String s = mail.getMessage().getSubject();
 		String[] arr = s.split("\\s+");
 		for (String el : listOfSubWords) {
 			for (int i=0; i<arr.length; i++) {
 				if (arr[i].equalsIgnoreCase(el)) {
-					return 1;
+					return 1.0;
 				}
 			}
 		}
-		return 0;
+		return 0.0;
 	}
 	
 	public void addNewElementToList(String element) {

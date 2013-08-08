@@ -23,7 +23,7 @@ public class LearnWithVector {
 		dVec = new Vector<double[]>();
 		this.dataSeriesVector();
 
-		predictedOut = new double[6];
+		predictedOut = new double[8];
 		this.dataSeriesOutArray();
 
 		//this.NN = new NeuralNet(0.1, NUM_LAYERS, 3, 6, 1);
@@ -120,11 +120,13 @@ public class LearnWithVector {
 	
 	public void dataSeriesVector() {
 		double[] x1 = new double[] { 1.0, 1.0, 1.0, 0.0, 0.0 };		
-		double[] x2 = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
+		double[] x2 = new double[] { 1.0, 0.0, 0.0, 1.0, 1.0 };
 		double[] x3 = new double[] { 1.0, 0.0, 1.0, 0.0, 0.0 };
 		double[] x4 = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0 };
 		double[] x5 = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
 		double[] x6 = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+		double[] x7 = new double[] { 1.0, 1.0, 1.0, 0.0, 1.0 };
+		double[] x8 = new double[] { 0.0, 1.0, 1.0, 1.0, 0.0 };
 
 		//dVec = new Vector<double[]>();
 
@@ -134,21 +136,27 @@ public class LearnWithVector {
 		dVec.add(x4);
 		dVec.add(x5);
 		dVec.add(x6);
+		dVec.add(x7);
+		dVec.add(x8);
 	}
 
 	public void dataSeriesOutArray() {
-		double d1 = 1.0f;
-		double d2 = 0.0f;
-		double d3 = 1.0f;
-		double d4 = 1.0f;
-		double d5 = 0.0f;
+		double d1 = 1.0;
+		double d2 = 0.0;
+		double d3 = 1.0;
+		double d4 = 0.0;
+		double d5 = 0.0;
 		double d6 = 0.0;
+		double d7 = 1.0;
+		double d8 = 1.0;
 		predictedOut[0] = d1;
 		predictedOut[1] = d2;
 		predictedOut[2] = d3;
 		predictedOut[3] = d4;
 		predictedOut[4] = d5;
 		predictedOut[5] = d6;
+		predictedOut[6] = d7;
+		predictedOut[7] = d8;
 	}
 	
 	/**
