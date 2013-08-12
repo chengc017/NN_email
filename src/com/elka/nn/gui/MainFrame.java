@@ -66,6 +66,7 @@ public class MainFrame {
 	private FlowVariables fv;
 	private AnalyzeMail am = null;
 	private AnalyzeMailsFromDir amfd = null;
+	private JTextField txtIlNeuronw;
 
 	/**
 	 * Launch the application.
@@ -174,7 +175,7 @@ public class MainFrame {
 		panel.add(btnWczytajSowaZ);
 
 		JButton btnZapiszSowaZ = new JButton("Zapisz słowa z analizy");
-		btnZapiszSowaZ.setBounds(174, 52, 155, 23);
+		btnZapiszSowaZ.setBounds(10, 77, 155, 23);
 		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
 
@@ -207,8 +208,8 @@ public class MainFrame {
 
 		panel.add(btnWybierzLokalizacj);
 
-		JButton btnWykonajAnalizSw = new JButton("Wykonaj analizę słów");
-		btnWykonajAnalizSw.setBounds(339, 52, 154, 23);
+		JButton btnWykonajAnalizSw = new JButton("<html>" + "Wykonaj analizę słów" + "<br>" +  "spamowych wiadomości" + "</html>");
+		btnWykonajAnalizSw.setBounds(174, 52, 154, 48);
 		btnWykonajAnalizSw.addActionListener(new GetWordsFromCurrentLocation());
 		panel.add(btnWykonajAnalizSw);
 
@@ -216,6 +217,20 @@ public class MainFrame {
 		btnNauczSiedobierz.setBounds(836, 52, 167, 23);
 		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
+		
+		JButton button = new JButton("<html>" + "Wykonaj analizę słów" + "<br>" +  "pożądanych wiadomości" + "</html>");
+		button.setBounds(339, 52, 160, 48);
+		panel.add(button);
+		
+		txtIlNeuronw = new JTextField();
+		txtIlNeuronw.setText("il. neuronów");
+		txtIlNeuronw.setBounds(509, 80, 86, 20);
+		panel.add(txtIlNeuronw);
+		txtIlNeuronw.setColumns(10);
+		
+		JButton btnNewButton = new JButton("OK");
+		btnNewButton.setBounds(605, 77, 47, 24);
+		panel.add(btnNewButton);
 	
 
 		JPanel panel_1 = new JPanel();
