@@ -124,7 +124,7 @@ public class MainFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame("Neural Network Mail Analyzer");
+		frame = new JFrame("Neuronowy klasyfikator poczty elektronicznej");
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 1000, 600);
 
@@ -169,13 +169,13 @@ public class MainFrame {
 		textField_4.setBounds(756, 11, 246, 30);
 		panel.add(textField_4);
 
-		JButton btnWczytajSowaZ = new JButton("Wczytaj słowa z pliku");
+		JButton btnWczytajSowaZ = new JButton("Wczytaj słowa spamowe");
 		btnWczytajSowaZ.setBounds(10, 52, 154, 23);
 		btnWczytajSowaZ.addActionListener(new LoadWordsWithJFC());
 		panel.add(btnWczytajSowaZ);
 
-		JButton btnZapiszSowaZ = new JButton("Zapisz słowa z analizy");
-		btnZapiszSowaZ.setBounds(10, 77, 155, 23);
+		JButton btnZapiszSowaZ = new JButton("Zapisz słowa spamowe");
+		btnZapiszSowaZ.setBounds(172, 52, 155, 23);
 		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
 
@@ -208,8 +208,8 @@ public class MainFrame {
 
 		panel.add(btnWybierzLokalizacj);
 
-		JButton btnWykonajAnalizSw = new JButton("<html>" + "Wykonaj analizę słów" + "<br>" +  "spamowych wiadomości" + "</html>");
-		btnWykonajAnalizSw.setBounds(174, 52, 154, 48);
+		JButton btnWykonajAnalizSw = new JButton("Analiza słów spamowych");
+		btnWykonajAnalizSw.setBounds(337, 52, 162, 23);
 		btnWykonajAnalizSw.addActionListener(new GetWordsFromCurrentLocation());
 		panel.add(btnWykonajAnalizSw);
 
@@ -218,8 +218,8 @@ public class MainFrame {
 		btnNauczSiedobierz.addActionListener(new SetWeightsByLearning());
 		panel.add(btnNauczSiedobierz);
 		
-		JButton button = new JButton("<html>" + "Wykonaj analizę słów" + "<br>" +  "pożądanych wiadomości" + "</html>");
-		button.setBounds(339, 52, 160, 48);
+		JButton button = new JButton("Analiza słów pożądanych");
+		button.setBounds(337, 76, 162, 24);
 		panel.add(button);
 		
 		txtIlNeuronw = new JTextField();
@@ -231,6 +231,14 @@ public class MainFrame {
 		JButton btnNewButton = new JButton("OK");
 		btnNewButton.setBounds(605, 77, 47, 24);
 		panel.add(btnNewButton);
+		
+		JButton button_1 = new JButton("Wczytaj słowa pożądane");
+		button_1.setBounds(10, 77, 154, 23);
+		panel.add(button_1);
+		
+		JButton button_2 = new JButton("Zapisz słowa pożądane");
+		button_2.setBounds(172, 77, 155, 23);
+		panel.add(button_2);
 	
 
 		JPanel panel_1 = new JPanel();
