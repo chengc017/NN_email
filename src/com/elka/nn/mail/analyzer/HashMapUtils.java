@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -20,10 +21,14 @@ public class HashMapUtils {
 	public final int SIZEOFWORDS;
 
 	private HashMap<String, Integer> wordcount;
+	private HashMap<String, Integer> wordcountSPAM;
+	private HashMap<String, Integer> wordcountGOOD;
 //	private File inFile;
 	private BufferedReader in;
 	private FileWriter fw;
 	private String[] wordsArray;
+	private String[] wordsSPAMArray;
+	private String[] wordsGOODArray;
 	private FlowVariables fv;
 
 	
@@ -32,21 +37,20 @@ public class HashMapUtils {
 		this.fv = fv;
 		SIZEOFWORDS = fv.WORDSIZE;
 		wordcount = new HashMap<String, Integer>();
+		wordcountSPAM = new HashMap<String, Integer>();
+		wordcountGOOD = new HashMap<String, Integer>();
 		wordsArray = new String[fv.WORDSIZE];
+		wordsSPAMArray = new String[fv.WORDSIZE];
+		wordsGOODArray = new String[fv.WORDSIZE];
 		this.in = null;
 		this.fw = null;
 	}
 
-	public void getCountedList(String textToCount) throws IOException {
+	public void getCountedList(String textToCount, boolean forSPAM) throws IOException {
 
 		try {
-
-			// Opening file
-			// change "/Users/anyexample/input.txt" to path to your test file
-//			in = new BufferedReader(new FileReader(filePath));
-			// string buffer for file reading
 			String[] strA = textToCount.split(" ");
-
+			wordcount.clear();
 			// reading line by line from file
 			for (String strElement : strA) {
 				String str = strElement.toLowerCase(); // convert to lower case
@@ -95,10 +99,13 @@ public class HashMapUtils {
 						// remember current position as last non-letter symbol
 						idx1 = i;
 					}
-				}
+				}	
 			}
-			// Close buffered reader
-//			in.close();
+			if (forSPAM == true) {
+				wordcountSPAM.putAll(wordcount) ;
+			} else {
+				wordcountGOOD.putAll(wordcount);
+			}
 		} catch (Exception e) {
 			// If something unexpected happened
 			// print exception information and quit
@@ -107,11 +114,19 @@ public class HashMapUtils {
 		}
 	}
 	
-	public void sortHashMapByValuesToFile(File inFile) {
+	public void sortHashMapByValuesToFile(File inFile, boolean forSPAM) {
 	    // This code sorts outputs HashMap sorting it by values 
 	    // First we're getting values array  
+		HashMap<String, Integer> wordcountTMP = new HashMap<String, Integer>();
+		
+		if (forSPAM == true) {
+			wordcountTMP.putAll(wordcountSPAM) ;
+		} else {
+			wordcountTMP.putAll(wordcountGOOD);
+		}
+		
 	    ArrayList<Integer> values = new ArrayList<Integer>();
-	    values.addAll(wordcount.values());
+	    values.addAll(wordcountTMP.values());
 	    // and sorting it (in reverse order) 
 	    Collections.sort(values, Collections.reverseOrder());
 	    
@@ -126,8 +141,8 @@ public class HashMapUtils {
 	                continue;
 	            last_i = i;
 	            // we print all hash keys  
-	            for (String s : wordcount.keySet()) {
-	                if (wordcount.get(s) == i) {
+	            for (String s : wordcountTMP.keySet()) {
+	                if (wordcountTMP.get(s) == i) {
 	                	// which have this value
 	                	fw.write(s + ":" + i + "\n");
 	                	System.out.println(s + ":" + i);
@@ -141,13 +156,25 @@ public class HashMapUtils {
 	    }
 	}
 	
-	public void sortHashMapByValuesInNN() {
+	public void sortHashMapByValuesInNN(boolean forSPAM) {
 	    // This code sorts outputs HashMap sorting it by values 
 	    // First we're getting values array  
+		
+		HashMap<String, Integer> wordcountTMP = new HashMap<String, Integer>();
+		
+		if (forSPAM == true) {
+			wordcountTMP.putAll(wordcountSPAM) ;
+		} else {
+			wordcountTMP.putAll(wordcountGOOD);
+		}
+		
 	    ArrayList<Integer> values = new ArrayList<Integer>();
-	    values.addAll(wordcount.values());
+	    values.addAll(wordcountTMP.values());
 	    // and sorting it (in reverse order) 
 	    Collections.sort(values, Collections.reverseOrder());
+	    
+	    wordsArray = null;
+	    wordsArray = new String[fv.WORDSIZE];
 	    
 	    try {
 //	    	File newFile = new File(outPath);
@@ -162,8 +189,8 @@ public class HashMapUtils {
 	                continue;
 	            last_i = i;
 	            // we print all hash keys  
-	            for (String s : wordcount.keySet()) {
-	                if (wordcount.get(s) == i) {
+	            for (String s : wordcountTMP.keySet()) {
+	                if (wordcountTMP.get(s) == i) {
 	                	// which have this value
 	                	//System.out.println(s + ":" + i);
 	                	wordsArray[arrayCounter] = s;
@@ -173,15 +200,22 @@ public class HashMapUtils {
 	                	break;
 	            }
 	            // pretty inefficient, but works  
-	        } 
+	        }
+	        if (forSPAM == true) {
+	        	wordsSPAMArray = Arrays.copyOf(wordsArray, wordsArray.length);
+	        } else {
+	        	wordsGOODArray = Arrays.copyOf(wordsArray, wordsArray.length);
+	        }
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 	}
 	
-	public void readHashMapFromFile(File inputFile, Component parent) throws IOException {
+	public void readHashMapFromFile(File inputFile, Component parent, boolean forSPAM) throws IOException {
 		String[] tmpArray = new String[2];
 		int i = 0;
+		wordsArray = null;
+	    wordsArray = new String[fv.WORDSIZE];
 		try {
 			in = new BufferedReader(new FileReader(inputFile));
 			String str;
@@ -193,6 +227,11 @@ public class HashMapUtils {
 				wordsArray[i] = tmpArray[0];		// i biore pierwszy element (klucz)
 				i++;
 			}
+			if (forSPAM == true) {
+				wordsSPAMArray = Arrays.copyOf(wordsArray, wordsArray.length);
+			} else {
+				wordsGOODArray = Arrays.copyOf(wordsArray, wordsArray.length);
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -200,12 +239,12 @@ public class HashMapUtils {
 		}
 	}
 	
-	public void getWordsFromHashMapToArray() {
-		
+	public String[] getWordsSPAMArray() {
+		return wordsSPAMArray;
 	}
 	
-	public String[] getWordsArray() {
-		return wordsArray;
+	public String[] getWordsGOODArray() {
+		return wordsGOODArray;
 	}
 
 	/**

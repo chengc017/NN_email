@@ -24,7 +24,7 @@ public class SenderAnalyzer {
 		int[] intTab = new int[arr.length];
 		for (int i=0; i<arr.length; i++) {
 			System.out.println(arr[i]);
-			intTab[i] = hasXDigits(arr[i], 5);
+			intTab[i] = hasXDigits(arr[i], 3);
 		}
 		return intTab;
 	}
@@ -72,6 +72,13 @@ public class SenderAnalyzer {
 		return 0;
 	}
 	
+	public int getAnalyze() throws MessagingException {
+		int[] ret = analyzeSender();
+		if (returnTheBiggestVal(ret) == 1 || hasDomain(".ru") == 1 || hasDomain(".cn") == 1)
+			return 1;
+		else
+			return 0;
+	}
 	
 	
 	
@@ -83,7 +90,7 @@ public class SenderAnalyzer {
 	public static void main(String[] args) throws FileNotFoundException, MessagingException {
 		// TODO Auto-generated method stub
 		//String path = "D:\\SPAM_EML\\email2.eml";
-		String path = "/home/lukasz/Pulpit/Buty.eml";
+		String path = "C:\\Users\\Lukasz\\Desktop\\email16.eml";
 		MailReader MR = new MailReader(path);
 		SenderAnalyzer SA = new SenderAnalyzer(MR);
 		int[] tmp = SA.analyzeSender();

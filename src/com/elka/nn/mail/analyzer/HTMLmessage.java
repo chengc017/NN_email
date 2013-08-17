@@ -10,12 +10,13 @@ import javax.mail.Part;
 
 public class HTMLmessage {
 
-	private MailReader mail;
+	public MailReader mail;
 	private Message p;
-	private boolean isTextHTML = false;
+	private boolean isTextHTML;
 	
 	public HTMLmessage(MailReader mess) {
 		mail = mess;
+		isTextHTML = false;
 //		p = mail.getMessage();
 	}
 	
@@ -23,13 +24,17 @@ public class HTMLmessage {
 		return mail;
 	}
 	
-	public void isHTML() throws MessagingException {
+	public void isHTML() throws MessagingException, IOException {
 		Part p = mail.getMessage();
-		isTextHTML = p.isMimeType("text/html");
+		isTextHTML = analyzeParts(p);
 	}
 	
 	public int getIntOfBoolean() {
 		return isTextHTML ? 1 : 0;
+	}
+	
+	public boolean getBool() {
+		return this.isTextHTML;
 	}
 	
 	public boolean analyzeParts(Part p) throws MessagingException, IOException {
@@ -75,7 +80,7 @@ public class HTMLmessage {
 	public static void main(String[] args) throws MessagingException, IOException {
 		// TODO Auto-generated method stub
 		//String path = "D:\\SPAM_EML\\email2.eml";
-		String path = "/home/lukasz/Pulpit/Buty.eml";
+		String path = "C:\\Users\\Lukasz\\Desktop\\maile\\email8.eml";
 		MailReader MR = new MailReader(path);
 		HTMLmessage Hmess = new HTMLmessage(MR);
 		//Hmess.isHTML();

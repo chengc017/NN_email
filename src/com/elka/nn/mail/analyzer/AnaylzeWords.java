@@ -17,25 +17,24 @@ public class AnaylzeWords {
 		this.hsu = hsu;
 	}
 
-	public void readFiles(final File dir, StyledDocument doc) throws Exception {
+	public void readFiles(final File dir, StyledDocument doc, boolean forSPAM) throws Exception {
 		for (final File fileEntry : dir.listFiles()) {
 			if (fileEntry.isDirectory()) {
 				System.out.println("Jest tu folder: "
 						+ fileEntry.getAbsolutePath());
-				readFiles(fileEntry, doc);
+				readFiles(fileEntry, doc, forSPAM);
 			} else if (fileEntry.isFile()) {
 				System.out.println("A tu mamy pliczek: "
 						+ fileEntry.getAbsolutePath());
 				String tmp_path = fileEntry.getAbsolutePath();
 				System.out.println("A to jest jego nazwa: "
 						+ fileEntry.getName());
-
 				if (tmp_path.endsWith(".eml")) {
 					MR = new MailReader(tmp_path);
 					html_mess = new HTMLmessage(MR);
 					isHTML = html_mess.analyzeParts(html_mess.getMail().getMessage());
 					if (!isHTML) {
-						hsu.getCountedList(MR.getText(MR.getMessage()));
+						hsu.getCountedList(MR.getText(MR.getMessage()), forSPAM);
 					}
 				}
 				else {
@@ -43,8 +42,6 @@ public class AnaylzeWords {
 				}
 			}
 		}
-		// hsu.sortHashMapByValuesToFile(toSave);
-		// System.out.println("Tu jestem po SORT_HASH");
 	}
 
 	/**

@@ -171,12 +171,12 @@ public class MainFrame {
 
 		JButton btnWczytajSowaZ = new JButton("Wczytaj słowa spamowe");
 		btnWczytajSowaZ.setBounds(10, 52, 154, 23);
-		btnWczytajSowaZ.addActionListener(new LoadWordsWithJFC());
+		btnWczytajSowaZ.addActionListener(new LoadWordsSPAMWithJFC());
 		panel.add(btnWczytajSowaZ);
 
 		JButton btnZapiszSowaZ = new JButton("Zapisz słowa spamowe");
 		btnZapiszSowaZ.setBounds(172, 52, 155, 23);
-		btnZapiszSowaZ.addActionListener(new SaveWordsToFileWithJFC());
+		btnZapiszSowaZ.addActionListener(new SaveWordsSPAMToFileWithJFC());
 		panel.add(btnZapiszSowaZ);
 
 		JButton btnWczytajWagiZ = new JButton("Wczytaj wagi z pliku");
@@ -210,7 +210,7 @@ public class MainFrame {
 
 		JButton btnWykonajAnalizSw = new JButton("Analiza słów spamowych");
 		btnWykonajAnalizSw.setBounds(337, 52, 162, 23);
-		btnWykonajAnalizSw.addActionListener(new GetWordsFromCurrentLocation());
+		btnWykonajAnalizSw.addActionListener(new GetWordsSPAMFromCurrentLocation());
 		panel.add(btnWykonajAnalizSw);
 
 		JButton btnNauczSiedobierz = new JButton("Naucz sieć (dobierz wagi)");
@@ -220,24 +220,29 @@ public class MainFrame {
 		
 		JButton button = new JButton("Analiza słów pożądanych");
 		button.setBounds(337, 76, 162, 24);
+		button.addActionListener(new GetWordsGOODFromCurrentLocation());
 		panel.add(button);
 		
 		txtIlNeuronw = new JTextField();
 		txtIlNeuronw.setText("il. neuronów");
 		txtIlNeuronw.setBounds(509, 80, 86, 20);
+		
 		panel.add(txtIlNeuronw);
 		txtIlNeuronw.setColumns(10);
 		
 		JButton btnNewButton = new JButton("OK");
 		btnNewButton.setBounds(605, 77, 47, 24);
+		btnNewButton.addActionListener(new AcceptNumberOfNeurons());
 		panel.add(btnNewButton);
 		
 		JButton button_1 = new JButton("Wczytaj słowa pożądane");
 		button_1.setBounds(10, 77, 154, 23);
+		button_1.addActionListener(new LoadWordsGOODWithJFC());
 		panel.add(button_1);
 		
 		JButton button_2 = new JButton("Zapisz słowa pożądane");
 		button_2.setBounds(172, 77, 155, 23);
+		button_2.addActionListener(new SaveWordsGOODToFileWithJFC());
 		panel.add(button_2);
 	
 
@@ -288,7 +293,7 @@ public class MainFrame {
 		}
 	}
 
-	private class LoadWordsWithJFC implements ActionListener {
+	private class LoadWordsSPAMWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -299,18 +304,18 @@ public class MainFrame {
 			if (openRet == JFileChooser.APPROVE_OPTION) {
 				File jfcWordsFile = jfcWords.getSelectedFile();
 				try {
-					hsu.readHashMapFromFile(jfcWordsFile, frame);
-					fv.setWordsOn(true);
+					hsu.readHashMapFromFile(jfcWordsFile, frame, true);
+					fv.setWordsSPAMOn(true);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					textField.setForeground(Color.red.darker());
-					textField.setText("Niepoprawnie wczytano słowa!");
+					textField.setText("Niepoprawnie wczytano słowa spamowe!");
 				}
 				try {
-					doc.insertString(doc.getLength(), "Wczytane słowa: \n ",
+					doc.insertString(doc.getLength(), "Wczytane słowa spamowe: \n ",
 							null);
-					for (String el : hsu.getWordsArray()) {
+					for (String el : hsu.getWordsSPAMArray()) {
 						doc.insertString(doc.getLength() - 1, el + "\n", null);
 					}
 					doc.insertString(doc.getLength(),
@@ -320,18 +325,49 @@ public class MainFrame {
 					JOptionPane.showMessageDialog(frame, "Wystąpił błąd - niepoprawne wczytanie słów", "Błąd wczytywania słów", JOptionPane.ERROR_MESSAGE);
 				}
 				textField.setForeground(Color.green.darker());
-				textField.setText("Poprawnie wczytano słowa!");
-				
-
-				// @TODO TU trzeba jeszcze porobic jakies pola boolowskie, ktore
-				// po wczytaniu zmienilyby na true, ze wczytano
-				// i wtedy mozna dopiero by odpalic jakakolwiek analize, bo tak
-				// to puscimy analize bez slow to chujnia bedzie
+				textField.setText("Poprawnie wczytano słowa spamowe!");
 			}
 		}
 	}
 
-	private class SaveWordsToFileWithJFC implements ActionListener {
+	private class LoadWordsGOODWithJFC implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser jfcWords = new JFileChooser();
+			jfcWords.setFileFilter(new FilterTxt());
+			jfcWords.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int openRet = jfcWords.showOpenDialog(frame);
+			if (openRet == JFileChooser.APPROVE_OPTION) {
+				File jfcWordsFile = jfcWords.getSelectedFile();
+				try {
+					hsu.readHashMapFromFile(jfcWordsFile, frame, false);
+					fv.setWordsSPAMOn(true);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					textField.setForeground(Color.red.darker());
+					textField.setText("Niepoprawnie wczytano słowa pożądane!");
+				}
+				try {
+					doc.insertString(doc.getLength(), "Wczytane słowa pożądane: \n ",
+							null);
+					for (String el : hsu.getWordsGOODArray()) {
+						doc.insertString(doc.getLength() - 1, el + "\n", null);
+					}
+					doc.insertString(doc.getLength(),
+							"\n ------------------- \n ", null);
+				} catch (Exception e_doc) {
+					e_doc.printStackTrace();
+					JOptionPane.showMessageDialog(frame, "Wystąpił błąd - niepoprawne wczytanie słów", "Błąd wczytywania słów", JOptionPane.ERROR_MESSAGE);
+				}
+				textField.setForeground(Color.green.darker());
+				textField.setText("Poprawnie wczytano słowa spamowe!");
+			}
+		}
+	}
+	
+	private class SaveWordsSPAMToFileWithJFC implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -341,13 +377,37 @@ public class MainFrame {
 			if (saveRet == JFileChooser.APPROVE_OPTION) {
 				File toSave = jfcSaveWords.getSelectedFile();
 				try {
-					hsu.sortHashMapByValuesToFile(toSave);
+					hsu.sortHashMapByValuesToFile(toSave, true);
 					textField_3.setForeground(Color.green.darker());
-					textField_3.setText("Poprawnie zapisano słowa!");
+					textField_3.setText("Poprawnie zapisano słowa spamowe!");
 				} catch (Exception e2) {
 					e2.printStackTrace();
 					textField_3.setForeground(Color.red.darker());
-					textField_3.setText("Niepoprawnie zapisano słowa!");
+					textField_3.setText("Niepoprawnie zapisano słowa spamowe!");
+
+				}
+			}
+		}
+		// @TODO trzeba by odpowiednie pliki wczytać i potestować.
+	}
+	
+	private class SaveWordsGOODToFileWithJFC implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser jfcSaveWords = new JFileChooser();
+			jfcSaveWords.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int saveRet = jfcSaveWords.showSaveDialog(frame);
+			if (saveRet == JFileChooser.APPROVE_OPTION) {
+				File toSave = jfcSaveWords.getSelectedFile();
+				try {
+					hsu.sortHashMapByValuesToFile(toSave, false);
+					textField_3.setForeground(Color.green.darker());
+					textField_3.setText("Poprawnie zapisano słowa pożadane!");
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					textField_3.setForeground(Color.red.darker());
+					textField_3.setText("Niepoprawnie zapisano słowa pożadane!");
 
 				}
 			}
@@ -384,7 +444,6 @@ public class MainFrame {
 				}
 			}
 		}
-
 	}
 
 	public class SaveWeightsToFileWithJFC implements ActionListener {
@@ -409,24 +468,20 @@ public class MainFrame {
 		}
 	}
 
-	public class GetWordsFromCurrentLocation implements ActionListener {
+	public class GetWordsSPAMFromCurrentLocation implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			File currentRoot = model.getRoot();
 			AnaylzeWords aw = new AnaylzeWords(hsu);
 			try {
-				aw.readFiles(currentRoot, doc);
-				hsu.sortHashMapByValuesInNN();
-				fv.setWordsOn(true);
+				aw.readFiles(currentRoot, doc, true);
+				hsu.sortHashMapByValuesInNN(true);
+				fv.setWordsSPAMOn(true);
 				textField.setForeground(Color.green.darker());
-				textField.setText("Poprawnie wykonano analizę!");
+				textField.setText("Poprawnie wykonano analizę słów spamowych!");
 				doc.insertString(doc.getLength(), "Słowa \n", null);
-				/*
-				 * for (String strEl : hsu.getWordsArray()) {
-				 * doc.insertString(doc.getLength(), strEl + " ", null); }
-				 */
-				String[] strArr = hsu.getWordsArray();
+				String[] strArr = hsu.getWordsSPAMArray();
 				for (int i = 0; i < strArr.length; i++) {
 					doc.insertString(doc.getLength(), strArr[i], null);
 					doc.insertString(doc.getLength(), ", ", null);
@@ -435,7 +490,36 @@ public class MainFrame {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				textField.setForeground(Color.red.darker());
-				textField.setText("Niepoprawnie wykonano analizę!");
+				textField.setText("Niepoprawnie wykonano analizę słów spamowych!");
+				JOptionPane.showMessageDialog(frame, "Wystąpił błąd - zmień lokalizację na taką, która zawiera pliki typu .eml", "Błąd wykonania analizy", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
+	}
+	
+	public class GetWordsGOODFromCurrentLocation implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			File currentRoot = model.getRoot();
+			AnaylzeWords aw = new AnaylzeWords(hsu);
+			try {
+				aw.readFiles(currentRoot, doc, false);
+				hsu.sortHashMapByValuesInNN(false);
+				fv.setWordsGOODOn(true);
+				textField.setForeground(Color.green.darker());
+				textField.setText("Poprawnie wykonano analizę słów pożądanych!");
+				doc.insertString(doc.getLength(), "Słowa \n", null);
+				String[] strArr = hsu.getWordsGOODArray();
+				for (int i = 0; i < strArr.length; i++) {
+					doc.insertString(doc.getLength(), strArr[i], null);
+					doc.insertString(doc.getLength(), ", ", null);
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				textField.setForeground(Color.red.darker());
+				textField.setText("Niepoprawnie wykonano analizę słów pożądanych!");
 				JOptionPane.showMessageDialog(frame, "Wystąpił błąd - zmień lokalizację na taką, która zawiera pliki typu .eml", "Błąd wykonania analizy", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -487,10 +571,16 @@ public class MainFrame {
 				if (!pathname.endsWith(".eml")) {
 					throw new Exception();
 				}
-				if (fv.getWordsOn() && fv.getWeightsOn()) {
+				if (fv.getWordsSPAMOn() && fv.getWordsGOODOn() && fv.getWeightsOn()) {
 					am.makeDoubleVector(pathname);
-					double wynik = NN.goForward(am.getbinVector());
-					doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+					double[] wek = am.getbinVector();
+					for (int i = 0; i < wek.length; i++) {
+						Double tmp = wek[i];
+						doc.insertString(doc.getLength(), tmp.toString(), null);
+						doc.insertString(doc.getLength(), ", ", null);
+					}
+					//double wynik = NN.goForward(am.getbinVector());
+					//doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
 				}
 				else {
 					JOptionPane.showMessageDialog(frame, "Wagi lub słowa nie są poprawnie ustalone w sieci", "Błąd", JOptionPane.ERROR_MESSAGE);
@@ -510,7 +600,7 @@ public class MainFrame {
 		public void actionPerformed(ActionEvent e) {
 			amfd = new AnalyzeMailsFromDir(hsu, fv, NN);
 			File currentRoot = model.getRoot();
-			if (fv.getWordsOn() && fv.getWeightsOn()) {
+			if (fv.getWordsSPAMOn() && fv.getWordsGOODOn() && fv.getWeightsOn()) {
 				amfd.getScoreFromCurrentDir(currentRoot, doc);
 				try {
 					amfd.infoDoc(doc);
@@ -521,6 +611,24 @@ public class MainFrame {
 			}
 			else {
 				JOptionPane.showMessageDialog(frame, "Wagi lub słowa nie są poprawnie ustalone w sieci", "Błąd", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+	}
+	
+	public class AcceptNumberOfNeurons implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String textInField = txtIlNeuronw.getText();
+			try {
+				int check = Integer.parseInt(textInField);
+				fv.setNumberOfNeurons(check);
+				doc.insertString(doc.getLength(), "Ilość neuronów użyta w warstwie ukrytej sieci: " + check, null);
+				doc.insertString(doc.getLength(), "\n", null);
+			} 
+			catch(NumberFormatException | BadLocationException nfe) {
+				JOptionPane.showMessageDialog(frame, "Nie wprowadzono ilości neuronów bądź nie jest ona liczbą całkowitą", "Błąd", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		
