@@ -11,7 +11,7 @@ public class FlowVariables {
 	public final int LAYERS = 2;
 	public int NEURONS_HID = 6;
 	public final int NEURONS_OUT = 1;
-	public final int NUM_INPUT = WORDSIZE + OTHERSIZE + 1;
+	public final int NUM_INPUT = WORDSIZE*2 + OTHERSIZE + 1;
 	public final double LEARN_RATE = 0.0001;
 	
 	public FlowVariables() {

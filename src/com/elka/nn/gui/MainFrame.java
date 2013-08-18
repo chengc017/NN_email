@@ -533,8 +533,8 @@ public class MainFrame {
 			try {
 				doc.insertString(doc.getLength(),
 						"\nTrwa ustalanie wag, proszę czekać...\n", null);
-				LearnWithVector lwv = new LearnWithVector(NN);
-				lwv.setWeights();
+				LearnWithVector lwv = new LearnWithVector(NN, fv);
+				lwv.setWeightsHash();
 				fv.setWeightsOn(true);
 				doc.insertString(doc.getLength(),
 						" Poprawnie zakończono ustalanie wag!\n", null);

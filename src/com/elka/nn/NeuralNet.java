@@ -1,6 +1,9 @@
 package com.elka.nn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -114,6 +117,31 @@ public class NeuralNet {
 			//learnNet(x, data[i]);
 			// System.out.println(NN.toStringX());
 			setError(goForward(x), data[i]);
+			/*System.out.println("Iteracja zew: " + k + " Iteracja wew: "
+					+ i + " " + " Wart. otrzymana: "
+					+ getLayerLastSolution() + " Wart. ocze: "
+					+ data[i]);
+			*/
+		}
+		return getError();
+	}
+	
+	public double goThroughLearning(HashMap<double[], Double> hash) {
+		// System.out.println(NN.toString());
+		/*
+		if (x.length != data.length) {
+			System.out.println("Rozmiar wektora wejsciowego != wektora z danymi");
+			return -1;
+		}*/
+		setErrorZero();
+		HashMap<double[], Double> localHash = hash;
+		Iterator<double[]> it = localHash.keySet().iterator();
+		while(it.hasNext()) {
+			double[] tmpx = it.next();
+			double predictedOut = localHash.get(tmpx);
+			//learnNet(x, data[i]);
+			// System.out.println(NN.toStringX());
+			setError(goForward(tmpx), predictedOut);
 			/*System.out.println("Iteracja zew: " + k + " Iteracja wew: "
 					+ i + " " + " Wart. otrzymana: "
 					+ getLayerLastSolution() + " Wart. ocze: "

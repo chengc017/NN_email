@@ -1,5 +1,7 @@
 package com.elka.nn;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -205,6 +207,41 @@ public class MinKierunkowa {
 		}
 		return secParam;
 	}
+	
+	public double getParamOfMinKierunkowa(HashMap<double[], Double> hash) {
+		Network.makeOriginalWeightsCopy(); // zeby mi oryginalne wagi nie
+											// zniknely
+		firstParam = 0.0;
+		secParam = 1E-5;// 0.001;
+		double ff1 = goForwardMinKierunkowa(hash, this.firstParam);
+		double ff2 = goForwardMinKierunkowa(hash, this.secParam);
+		while (ff1 > ff2) {
+			firstParam = secParam;
+			secParam = 2 * secParam;
+			ff1 = goForwardMinKierunkowa(hash, this.firstParam);
+			ff2 = goForwardMinKierunkowa(hash, this.secParam);
+		}
+
+		double al1 = secParam - 0.613f * (secParam - firstParam);
+		double al2 = 0.613f * (secParam - firstParam) + firstParam;
+		Network.getOriginalWeights();
+		for (int i = 0; i < 15; i++) {
+			ff1 = goForwardMinKierunkowa(hash, al2);
+			ff2 = goForwardMinKierunkowa(hash, al1);
+			
+			if (ff1 > ff2) {
+				secParam = al2;
+				al2 = al1;
+				al1 = 0.613f * firstParam + (1f - 0.613f) * secParam;
+			} else {
+				firstParam = al1;
+				al1 = al2;
+				al2 = 0.613f * secParam + (1f - 0.613f) * firstParam;
+			}
+			Network.getOriginalWeights();
+		}
+		return secParam;
+	}
 
 	private double goForwardMinKierunkowa(Vector<double[]> dVec, double[] data,
 			double param) {
@@ -213,6 +250,14 @@ public class MinKierunkowa {
 		Network.getOriginalWeights();
 		Network.updateCopyWeightsInLayers(param);
 		return Network.goThroughLearning(dVec, data);
+	}
+	
+	private double goForwardMinKierunkowa(HashMap<double[], Double> hash, double param) {
+		// Network.makeOriginalWeightsCopy(); // zeby mi oryginalne wagi nie
+		// zniknely
+		Network.getOriginalWeights();
+		Network.updateCopyWeightsInLayers(param);
+		return Network.goThroughLearning(hash);
 	}
 
 	// Trzeba stworzyc w NeuraltNet procedure, ktora uaktualnia te WeightsCopy:

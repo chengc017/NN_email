@@ -20,15 +20,15 @@ public class AnaylzeWords {
 	public void readFiles(final File dir, StyledDocument doc, boolean forSPAM) throws Exception {
 		for (final File fileEntry : dir.listFiles()) {
 			if (fileEntry.isDirectory()) {
-				System.out.println("Jest tu folder: "
-						+ fileEntry.getAbsolutePath());
+//				System.out.println("Jest tu folder: "
+//						+ fileEntry.getAbsolutePath());
 				readFiles(fileEntry, doc, forSPAM);
 			} else if (fileEntry.isFile()) {
 				System.out.println("A tu mamy pliczek: "
 						+ fileEntry.getAbsolutePath());
 				String tmp_path = fileEntry.getAbsolutePath();
-				System.out.println("A to jest jego nazwa: "
-						+ fileEntry.getName());
+//				System.out.println("A to jest jego nazwa: "
+//						+ fileEntry.getName());
 				if (tmp_path.endsWith(".eml")) {
 					MR = new MailReader(tmp_path);
 					html_mess = new HTMLmessage(MR);
