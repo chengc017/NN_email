@@ -35,7 +35,7 @@ public class LearningVector {
 	
 	public void setArraysWithSamples() throws Exception {
 		double value = 0;
-		for (int i = 0; i<250; i++) {
+		for (int i = 0; i<400; i++) {
 			fullFillArrays();
 			value = makeComparison();
 			double[] array = new double[tmpArray.length];
@@ -79,15 +79,15 @@ public class LearningVector {
 		
 		if (badCount > goodCount && badCount-goodCount >= 3) {
 			if (otherCount == 0) {
-				outValue = 0.7;
+				outValue = 0.8;
 			}
 			else if (otherCount == 1) {
-				outValue = other[1] == 1 ? 0.8 : 0.95;
+				outValue = other[1] == 1 ? 0.9 : 0.9;
 			}
 			else {
 				outValue = 1.0;
 			}
-		} 
+		}
 		else if (badCount > goodCount && badCount-goodCount < 3) {
 			if (otherCount == 0) {
 				outValue = 0.7;
@@ -96,18 +96,18 @@ public class LearningVector {
 				outValue = other[1] == 1 ? 0.6 : 0.8;
 			}
 			else {
-				outValue = 0.8;
+				outValue = 1.0;
 			}
 		}
 		else if (goodCount > badCount && goodCount-badCount >= 3) {
 			if (otherCount == 0) {
-				outValue = 0.15;
+				outValue = 0.0;
 			}
 			else if (otherCount == 1) {
-				outValue = other[1] == 1 ? 0.35 : 0.45;
+				outValue = other[1] == 1 ? 0.15 : 0.35;
 			}
 			else {
-				outValue = 0.5;
+				outValue = 0.45;
 			}
 		}
 		else if (goodCount > badCount && goodCount-badCount < 3) {
@@ -115,7 +115,7 @@ public class LearningVector {
 				outValue = 0.15;
 			}
 			else if (otherCount == 1) {
-				outValue = other[1] == 1 ? 0.35 : 0.6;
+				outValue = other[1] == 1 ? 0.3 : 0.5;
 			}
 			else {
 				outValue = 0.65;
@@ -132,7 +132,6 @@ public class LearningVector {
 				outValue = 0.8;
 			}
 		}
-		
 		return outValue;
 	}
 	

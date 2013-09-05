@@ -19,19 +19,24 @@ public class AnalyzeMailsFromDir {
 	private int allCount;
 	private int goodCount;
 	private int badCount;
+	private DirUtils du;
 	
 	
-	public AnalyzeMailsFromDir(HashMapUtils hsu, FlowVariables fv, NeuralNet NN) {
+	public AnalyzeMailsFromDir(HashMapUtils hsu, FlowVariables fv, NeuralNet NN, File root) {
 		this.hsu = hsu;
 		this.fv = fv;
 		this.NN = NN;
 		this.allCount = 0;
 		this.goodCount = 0;
 		this.badCount = 0;
+		this.du = new DirUtils(root);
 	}
 	
 	public void getScoreFromCurrentDir(File dir, StyledDocument doc) {
 		double out;
+		if (du.checkFolderExisting() == false) {
+			du.createFolders();
+		}
 		for (final File fileEntry : dir.listFiles()) {
 			if (fileEntry.isDirectory()) {
 				System.out.println("Jest tu folder: "
@@ -51,6 +56,8 @@ public class AnalyzeMailsFromDir {
 						am.makeDoubleVector(tmp_path);
 						out = NN.goForward(am.getbinVector());
 						this.countingFunc(out);
+						System.out.println("SCIEZKI NIBY PRZENOSZONYCH PLIKOW: " + tmp_path);
+						du.moveFileBecauseOfScore(new File(tmp_path), out);
 						allCount++;
 						//doc.insertString(doc.getLength(), "Wynik to: " + out + "\n" , null);
 					} catch (FileNotFoundException | MessagingException e) {

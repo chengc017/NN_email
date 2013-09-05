@@ -34,8 +34,6 @@ public class Layer {
 			} else {
 				n.setY(n.getU());
 			}
-
-			// n.biActiveFunction(n.getU());
 		}
 	}
 

@@ -159,7 +159,7 @@ public class NeuralNet {
 	*/
 	
 	public void setError(double y, double d) { // blad sredniokwadratowy sieci
-		this.error = this.error + 0.5f*((y - d) * (y - d));
+		this.error = this.error + 0.5*((y - d) * (y - d));
 	}
 
 	public void setErrorZero() {

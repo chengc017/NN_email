@@ -37,6 +37,7 @@ import com.elka.nn.WeightsUtils;
 import com.elka.nn.mail.analyzer.AnalyzeMail;
 import com.elka.nn.mail.analyzer.AnalyzeMailsFromDir;
 import com.elka.nn.mail.analyzer.AnaylzeWords;
+import com.elka.nn.mail.analyzer.DirUtils;
 import com.elka.nn.mail.analyzer.HashMapUtils;
 
 import java.awt.event.ActionListener;
@@ -572,6 +573,10 @@ public class MainFrame {
 					throw new Exception();
 				}
 				if (fv.getWordsSPAMOn() && fv.getWordsGOODOn() && fv.getWeightsOn()) {
+					DirUtils du = new DirUtils(model.getRoot());
+					if (du.checkFolderExisting() == false) {
+						du.createFolders();
+					}
 					am.makeDoubleVector(pathname);
 					double[] wek = am.getbinVector();
 					for (int i = 0; i < wek.length; i++) {
@@ -579,8 +584,15 @@ public class MainFrame {
 						doc.insertString(doc.getLength(), tmp.toString(), null);
 						doc.insertString(doc.getLength(), ", ", null);
 					}
-					//double wynik = NN.goForward(am.getbinVector());
-					//doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+					double wynik = NN.goForward(am.getbinVector());
+					du.moveFileBecauseOfScore(new File(pathname), wynik);
+					System.out.println("SCIEZKA PLIKU POJEDYNCZEGO: " + pathname);
+					doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
+					if (wynik >= 0.51) {
+						doc.insertString(doc.getLength(), "\nSPAM!\n", null);
+					} else {
+						doc.insertString(doc.getLength(), "\nWiadomość pożądana!\n", null);
+					}
 				}
 				else {
 					JOptionPane.showMessageDialog(frame, "Wagi lub słowa nie są poprawnie ustalone w sieci", "Błąd", JOptionPane.ERROR_MESSAGE);
@@ -598,10 +610,13 @@ public class MainFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			amfd = new AnalyzeMailsFromDir(hsu, fv, NN);
 			File currentRoot = model.getRoot();
+			amfd = new AnalyzeMailsFromDir(hsu, fv, NN, currentRoot);
 			if (fv.getWordsSPAMOn() && fv.getWordsGOODOn() && fv.getWeightsOn()) {
+				long startTime = System.currentTimeMillis();
 				amfd.getScoreFromCurrentDir(currentRoot, doc);
+				long endTime = System.currentTimeMillis();
+				System.out.println("That took " + (endTime - startTime) + " milliseconds");
 				try {
 					amfd.infoDoc(doc);
 				} catch (BadLocationException e1) {

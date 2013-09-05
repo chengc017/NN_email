@@ -79,6 +79,7 @@ public class LearnWithVector {
 				System.exit(1);
 			}
 			System.setOut(out);*/
+		
 			for (int k = 0; k < 1500; k++) {
 				/*if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
@@ -115,6 +116,7 @@ public class LearnWithVector {
 					break;
 				}
 			}
+			
 //			out.close();
 		}
 
@@ -140,7 +142,8 @@ public class LearnWithVector {
 				System.exit(1);
 			}
 			System.setOut(out);*/
-			for (int k = 0; k < 1000; k++) {
+			long startTime = System.currentTimeMillis();
+			for (int k = 0; k < 1500; k++) {
 				/*if (k > 0) {
 					NN.setPrevError(); // poprzedni_blad = blad_aktualny (do
 										// nastepnej iteracji)
@@ -191,6 +194,8 @@ public class LearnWithVector {
 				}
 			}
 //			out.close();
+			long endTime = System.currentTimeMillis();
+			System.out.println("That took " + (endTime - startTime) + " milliseconds");
 		}
 
 		catch (Exception e) {

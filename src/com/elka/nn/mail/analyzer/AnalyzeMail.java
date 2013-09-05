@@ -28,16 +28,13 @@ public class AnalyzeMail {
 			MR = new MailReader(mailPath);
 			htmlmess = new HTMLmessage(MR);
 			String tmpMail = MR.getText(MR.getMessage());
-			System.out.println(tmpMail);
-			System.out.println(mailPath);
-			String[] tmpArray = tmpMail.split("\\s+");	// narazie niech to beda whitespace'y
+//			System.out.println(tmpMail);
+//			System.out.println(mailPath);
+			String[] tmpArray = tmpMail.split("\\s+");	
 			
 			String[] SPAMwords = hsu.getWordsSPAMArray();		
-			String[] GOODwords = hsu.getWordsGOODArray();
-			
-			int nextI = 0;
-			
-			// tu moze trzeba by jeszcze z rozmiarem tych tablic pokombinowac zeby sie nie psuly
+			String[] GOODwords = hsu.getWordsGOODArray();		
+			int nextI = 0;	
 			
 			for (int i=0; i<SPAMwords.length; i++) {
 				for (int k=0; k<tmpArray.length; k++) {

@@ -6,10 +6,10 @@ public class FlowVariables {
 	private boolean isWordsGOODOn;
 	private boolean isWeightsOn;
 	
-	public final int WORDSIZE = 15;
+	public final int WORDSIZE = 12;
 	public final int OTHERSIZE = 3;
 	public final int LAYERS = 2;
-	public int NEURONS_HID = 6;
+	public int NEURONS_HID = 8;
 	public final int NEURONS_OUT = 1;
 	public final int NUM_INPUT = WORDSIZE*2 + OTHERSIZE + 1;
 	public final double LEARN_RATE = 0.0001;
