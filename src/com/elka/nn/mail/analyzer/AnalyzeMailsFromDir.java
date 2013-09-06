@@ -56,11 +56,15 @@ public class AnalyzeMailsFromDir {
 						am.makeDoubleVector(tmp_path);
 						out = NN.goForward(am.getbinVector());
 						this.countingFunc(out);
-						System.out.println("SCIEZKI NIBY PRZENOSZONYCH PLIKOW: " + tmp_path);
-						du.moveFileBecauseOfScore(new File(tmp_path), out);
+						du.copyFile(new File(tmp_path), out);
 						allCount++;
-						//doc.insertString(doc.getLength(), "Wynik to: " + out + "\n" , null);
-					} catch (FileNotFoundException | MessagingException e) {
+						doc.insertString(doc.getLength(), "Wynik to: " + out + "\n" , null);
+						if (out >= 0.51) {
+							doc.insertString(doc.getLength(), "SPAM!\n", null);
+						} else {
+							doc.insertString(doc.getLength(), "Wiadomość pożądana!\n", null);
+						}
+					} catch (FileNotFoundException | MessagingException | BadLocationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

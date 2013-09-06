@@ -585,13 +585,12 @@ public class MainFrame {
 						doc.insertString(doc.getLength(), ", ", null);
 					}
 					double wynik = NN.goForward(am.getbinVector());
-					du.moveFileBecauseOfScore(new File(pathname), wynik);
-					System.out.println("SCIEZKA PLIKU POJEDYNCZEGO: " + pathname);
+					du.copyFile(new File(pathname), wynik);
 					doc.insertString(doc.getLength(), "\nWynik to: " + wynik + "\n", null);
 					if (wynik >= 0.51) {
-						doc.insertString(doc.getLength(), "\nSPAM!\n", null);
+						doc.insertString(doc.getLength(), "SPAM!\n", null);
 					} else {
-						doc.insertString(doc.getLength(), "\nWiadomość pożądana!\n", null);
+						doc.insertString(doc.getLength(), "Wiadomość pożądana!\n", null);
 					}
 				}
 				else {
